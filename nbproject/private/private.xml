@@ -6,11 +6,11 @@
             <file>file:/C:/Users/ASUS/OneDrive/Documents/NetBeansProjects/Ahiri/src/ahiri/fxml/LoginSignup.fxml</file>
             <file>file:/C:/Users/ASUS/OneDrive/Documents/NetBeansProjects/Ahiri/src/ahiri/DatabaseConnection.java</file>
             <file>file:/C:/Users/ASUS/OneDrive/Documents/NetBeansProjects/Ahiri/src/ahiri/Main.java</file>
-            <file>file:/C:/Users/ASUS/OneDrive/Documents/NetBeansProjects/Ahiri/src/ahiri/fxml/Favourite.fxml</file>
             <file>file:/C:/Users/ASUS/OneDrive/Documents/NetBeansProjects/Ahiri/src/ahiri/css/styling.css</file>
             <file>file:/C:/Users/ASUS/OneDrive/Documents/NetBeansProjects/Ahiri/src/ahiri/controllers/FavouriteController.java</file>
             <file>file:/C:/Users/ASUS/OneDrive/Documents/NetBeansProjects/Ahiri/src/ahiri/controllers/LoginSignupController.java</file>
-            <file>file:/C:/Users/ASUS/OneDrive/Documents/NetBeansProjects/Ahiri/src/ahiri/Song.java</file>
+            <file>file:/C:/Users/ASUS/OneDrive/Documents/NetBeansProjects/Ahiri/src/ahiri/fxml/Home.fxml</file>
+            <file>file:/C:/Users/ASUS/OneDrive/Documents/NetBeansProjects/Ahiri/src/ahiri/controllers/MediaBarController.java</file>
         </group>
     </open-files>
 </project-private>

@@ -16,10 +16,6 @@
     -fx-background-color : #00FFFF;
 }
 
-.primary_color{
-    -fx-background-color : #181818;
-}
-
 .centre_color{
     -fx-background-color : linear-gradient(#613cab,#201240 40%,#1a171f 50%);
 }
@@ -68,4 +64,18 @@
 
 .bold.table-cell{
     -fx-font-weight : bold;
+}
+
+.primary_color {
+	-fx-background-color :  linear-gradient(#540901,#420802,#2e0501,#210400,#120201,#120e0e,#0f0b0b, black);
+}
+.secondary_color {
+	-fx-background-color :  #09090a;
+}
+.selected {
+	-fx-border-color : #07db4d ;
+	-fx-border-width : 0 0 0 5;	
+}
+.media-bar {
+	-fx-background-color : #111111;
 }
