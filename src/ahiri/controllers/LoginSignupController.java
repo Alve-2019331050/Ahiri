@@ -179,7 +179,7 @@ public class LoginSignupController implements Initializable {
             if(queryResult.next()){
                 if(queryResult.getInt(1)==1){
                     Stage stage = (Stage)((Node) event.getSource()).getScene().getWindow();
-                    Parent root = FXMLLoader.load(getClass().getResource("../fxml/FXML.fxml"));
+                    Parent root = FXMLLoader.load(getClass().getResource("../fxml/Home.fxml"));
                     Scene scene = new Scene(root);
                     stage.setScene(scene);
                     stage.show();

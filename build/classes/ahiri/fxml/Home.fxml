@@ -3,18 +3,20 @@
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.control.Separator?>
 <?import javafx.scene.control.Slider?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="736.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ahiri.controllers.MediaBarController">
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="725.0" prefWidth="1350.0" styleClass="primary_color" stylesheets="@../css/styling.css" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ahiri.controllers.MediaBarController">
    <left>
-      <VBox prefHeight="647.0" prefWidth="230.0" styleClass="secondary_color" stylesheets="styling.css" BorderPane.alignment="CENTER">
+      <VBox prefHeight="647.0" prefWidth="230.0" styleClass="secondary_color" stylesheets="@../css/styling.css" BorderPane.alignment="CENTER">
          <children>
             <Button fx:id="btnMore" mnemonicParsing="false" style="-fx-background-color: transparent;">
                <graphic>
@@ -27,7 +29,7 @@
             </Button>
             <VBox prefHeight="123.0" prefWidth="230.0" spacing="10.0">
                <children>
-                  <HBox alignment="CENTER" prefHeight="61.0" prefWidth="230.0" styleClass="selected" stylesheets="@application.css">
+                  <HBox alignment="CENTER" prefHeight="61.0" prefWidth="230.0" styleClass="selected" stylesheets="@../css/styling.css">
                      <children>
                         <Button fx:id="btnHome" mnemonicParsing="false" style="-fx-background-color: transparent;">
                            <graphic>
@@ -38,7 +40,7 @@
                               </ImageView>
                            </graphic>
                         </Button>
-                        <Label prefHeight="49.0" prefWidth="181.0" text="  Home" textFill="WHITE">
+                        <Label prefHeight="49.0" prefWidth="181.0" styleClass="hover" stylesheets="@../css/styling.css" text="  Home" textFill="WHITE">
                            <font>
                               <Font name="Constantia Bold" size="15.0" />
                            </font>
@@ -55,7 +57,7 @@
                               </ImageView>
                            </graphic>
                         </Button>
-                        <Label prefHeight="24.0" prefWidth="179.0" text="  Search" textFill="#e1dbdb">
+                        <Label prefHeight="24.0" prefWidth="179.0" styleClass="hover" stylesheets="@../css/styling.css" text="  Search" textFill="#e1dbdb">
                            <font>
                               <Font name="Constantia" size="15.0" />
                            </font>
@@ -73,7 +75,7 @@
                               </ImageView>
                            </graphic>
                         </Button>
-                        <Label prefHeight="24.0" prefWidth="174.0" text="  Your library" textFill="#e1dbdb">
+                        <Label prefHeight="24.0" prefWidth="174.0" styleClass="hover" stylesheets="@../css/styling.css" text="  Your library" textFill="#e1dbdb">
                            <font>
                               <Font name="Constantia" size="15.0" />
                            </font>
@@ -97,7 +99,7 @@
                               </ImageView>
                            </graphic>
                         </Button>
-                        <Label prefHeight="17.0" prefWidth="186.0" text="  Create  Playlist" textFill="#e1dbdb">
+                        <Label prefHeight="17.0" prefWidth="186.0" styleClass="hover" stylesheets="@../css/styling.css" text="  Create  Playlist" textFill="#e1dbdb">
                            <font>
                               <Font name="Constantia" size="15.0" />
                            </font>
@@ -115,7 +117,7 @@
                               </ImageView>
                            </graphic>
                         </Button>
-                        <Label prefHeight="17.0" prefWidth="182.0" text="  Favourite" textFill="#e1dbdb">
+                        <Label onMouseClicked="#navigateFavourite" prefHeight="17.0" prefWidth="182.0" styleClass="hover" stylesheets="@../css/styling.css" text="  Favourite" textFill="#e1dbdb">
                            <font>
                               <Font name="Constantia" size="15.0" />
                            </font>
@@ -138,12 +140,12 @@
       </VBox>
    </left>
    <bottom>
-      <HBox prefHeight="112.0" prefWidth="1200.0" styleClass="media-bar" stylesheets="@application.css" BorderPane.alignment="CENTER">
+      <HBox prefHeight="112.0" prefWidth="1200.0" styleClass="media-bar" stylesheets="@../css/styling.css" BorderPane.alignment="CENTER">
          <children>
             <VBox prefHeight="112.0" prefWidth="280.0" />
             <VBox alignment="CENTER_RIGHT" prefHeight="112.0" prefWidth="46.0">
                <children>
-                  <Label text="0:00" textFill="#dacdcd" />
+                  <Label fx:id="curTimeLabel" text="0:00" textFill="#dacdcd" />
                </children>
             </VBox>
             <VBox prefHeight="112.0" prefWidth="671.0">
@@ -217,7 +219,7 @@
                      <children>
                         <HBox prefHeight="23.0" prefWidth="671.0">
                            <children>
-                              <Slider prefHeight="14.0" prefWidth="672.0" />
+                              <Slider fx:id="musicSlider" prefHeight="14.0" prefWidth="672.0" />
                            </children>
                         </HBox>
                      </children>
@@ -226,7 +228,7 @@
             </VBox>
             <VBox alignment="CENTER_LEFT" prefHeight="112.0" prefWidth="144.0">
                <children>
-                  <Label text="5:00" textFill="#c9c4c4" />
+                  <Label fx:id="endTimeLabel" text="5:00" textFill="#c9c4c4" />
                </children>
             </VBox>
             <VBox alignment="CENTER_LEFT" prefHeight="112.0" prefWidth="53.0">
@@ -264,4 +266,25 @@
          </children>
       </HBox>
    </bottom>
+   <center>
+      <VBox prefHeight="512.0" prefWidth="1073.0" spacing="20.0" BorderPane.alignment="CENTER">
+         <children>
+            <Pane prefHeight="200.0" prefWidth="200.0" VBox.vgrow="ALWAYS" />
+            <ScrollPane prefHeight="404.0" prefWidth="1120.0" style="-fx-background-color: transparent;">
+               <content>
+                  <VBox prefHeight="397.0" prefWidth="707.0" spacing="10.0">
+                     <children>
+                        <ScrollPane prefHeight="261.0" prefWidth="707.0" style="-fx-background-color: transparent;" VBox.vgrow="ALWAYS">
+                           <padding>
+                              <Insets left="20.0" />
+                           </padding>
+                        </ScrollPane>
+                        <ScrollPane prefHeight="261.0" prefWidth="707.0" style="-fx-background-color: transparent;" VBox.vgrow="ALWAYS" />
+                     </children>
+                  </VBox>
+               </content>
+            </ScrollPane>
+         </children>
+      </VBox>
+   </center>
 </BorderPane>
