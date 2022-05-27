@@ -182,6 +182,7 @@ public class LoginSignupController implements Initializable {
                     Parent root = FXMLLoader.load(getClass().getResource("../fxml/Home.fxml"));
                     Scene scene = new Scene(root);
                     stage.setScene(scene);
+                    stage.centerOnScreen();
                     stage.show();
                 }else{
                     showMessage(loginMessage,"Invalid login.Please try again.");

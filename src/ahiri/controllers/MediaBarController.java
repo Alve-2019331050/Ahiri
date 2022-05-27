@@ -1,16 +1,21 @@
 
 package ahiri.controllers;
 
+import ahiri.Song;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.ResourceBundle;
 import java.util.Timer;
 import java.util.TimerTask;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
+import javafx.event.Event;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -20,7 +25,11 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.Slider;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import javafx.stage.Stage;
@@ -56,11 +65,9 @@ public class MediaBarController implements Initializable {
     private Button volumeButton;
     @FXML
     private Slider volumeSlider;
-    @FXML
-    private Button enlargeButton;
     
     private File directory;
-    private File[] files;
+    File[] file;
  
     private ArrayList<File> playlist;
  
@@ -78,35 +85,81 @@ public class MediaBarController implements Initializable {
     private Label endTimeLabel;
     @FXML
     private Slider musicSlider;
+    @FXML
+    private HBox recentlyPlayedComponent;
+    private HBox favouriteComponent;
+    @FXML
+    private ImageView selectedImg;
+    @FXML
+    private Label selectedSongName;
+    @FXML
+    private Label selectedArtist;
 
+    String path = new File("C:\\Users\\ASUS\\OneDrive\\Documents\\NetBeansProjects\\Ahiri\\src\\ahiri\\music").getAbsolutePath();
     
     @Override
-    public void initialize(URL url, ResourceBundle rb) {
-        playlist = new ArrayList<File>();
-        directory = new File("../music");
-        
-	files = directory.listFiles();
-        
- 
-	if (files != null) {
+    public void initialize(URL url, ResourceBundle rb) { 
             
-            for (File file : files) {
-		playlist.add(file);
+        playlist = new ArrayList<File>();
+        directory = new File(path);
+        
+        File starting = new File(path+"\\"+selectedSongName.getText()+".mp3");
+        playlist.add(starting);
+        
+        try{
+            ContentController controller = new ContentController();
+            List<Song> recentlyPlayed = controller.getRecentlyPlayed();
+            
+            for(int i=0;i<recentlyPlayed.size();i++){
+                FXMLLoader loader = new FXMLLoader();
+                loader.setLocation(getClass().getResource("../fxml/Song.fxml"));
+                VBox vbox = loader.load();
+                SongController songController = loader.getController();
+                songController.setData(recentlyPlayed.get(i));
+                recentlyPlayedComponent.getChildren().add(vbox);
+                vbox.setOnMouseClicked(new EventHandler<Event>() {
+                    @Override
+                    public void handle(Event event) {
+                        ObservableList<Node> list = vbox.getChildren();
+                        for(int i=0;i<list.size();i++){
+                            Node node = list.get(i);
+                            if(i==0 && node instanceof ImageView){
+                                Image image = ((ImageView)node).getImage();
+                                selectedImg.setImage(image);
+                            }else if(i==1 && node instanceof Label){
+                                String name = ((Label)node).getText();
+                                selectedSongName.setText(name);
+                            }else if(node instanceof Label){
+                                String artist = ((Label)node).getText();
+                                selectedArtist.setText(artist);
+                            }
+                        }
+                        file=directory.listFiles();
+                        for(File files: file){
+                            String name = selectedSongName.getText();
+                            if((path+"\\"+name+".mp3").equals(files.toString())){
+                                playlist.add(files);
+                                media = new Media(files.toURI().toString());
+                                mediaPlayer = new MediaPlayer(media);
+                                System.out.println(mediaPlayer);
+                                volumeSlider.valueProperty().addListener(new ChangeListener<Number>() {
+                    
+                                    @Override
+                                    public void changed(ObservableValue<? extends Number> arg0, Number arg1, Number arg2) {
+                                        mediaPlayer.setVolume(volumeSlider.getValue()*0.01);
+                                    }
+                                });
+                            }
+                        }
+                    }
+                });
             }
-            media = new Media(playlist.get(songCount).toURI().toString());
-            mediaPlayer = new MediaPlayer(media);
-            volumeSlider.valueProperty().addListener(new ChangeListener<Number>() {
- 
-                @Override
-                public void changed(ObservableValue<? extends Number> arg0, Number arg1, Number arg2) {
-                       mediaPlayer.setVolume(volumeSlider.getValue()*0.01);	
-                }
-            });
-        }	
- 
-	musicSlider.setMin(0);
-	curTimeLabel.setText("00.00");
-	endTimeLabel.setText("00.00");
+            musicSlider.setMin(0);
+            curTimeLabel.setText("00.00");
+            endTimeLabel.setText("00.00");
+        }catch(IOException e){
+            e.printStackTrace();
+        }
     }    
 
     @FXML
@@ -135,9 +188,9 @@ public class MediaBarController implements Initializable {
     @FXML
     private void playMusic(ActionEvent event) {
         
-        initiateTimer();
-	mediaPlayer.setVolume(volumeSlider.getValue()*0.01);
-	mediaPlayer.play();
+                initiateTimer();
+                mediaPlayer.setVolume(volumeSlider.getValue()*0.01);
+                mediaPlayer.play();
     }
 
     @FXML
@@ -205,7 +258,7 @@ public class MediaBarController implements Initializable {
         Parent root = FXMLLoader.load(getClass().getResource("../fxml/Fabourite.fxml"));
         Scene scene = new Scene(root);
         stage.setScene(scene);
+        stage.centerOnScreen();
         stage.show();
     }
-    
 }

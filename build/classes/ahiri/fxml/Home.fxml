@@ -8,6 +8,7 @@
 <?import javafx.scene.control.Slider?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.Pane?>
@@ -142,7 +143,32 @@
    <bottom>
       <HBox prefHeight="112.0" prefWidth="1200.0" styleClass="media-bar" stylesheets="@../css/styling.css" BorderPane.alignment="CENTER">
          <children>
-            <VBox prefHeight="112.0" prefWidth="280.0" />
+            <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" spacing="10.0">
+               <children>
+                  <ImageView fx:id="selectedImg" fitHeight="60.0" fitWidth="60.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../images/tumi%20robe%20nirobe(2).jpg" />
+                     </image>
+                  </ImageView>
+                  <VBox prefHeight="200.0" prefWidth="100.0" spacing="5.0">
+                     <children>
+                        <Label fx:id="selectedSongName" prefHeight="15.0" prefWidth="117.0" text="TUMI RABE NIROBE" textFill="WHITE">
+                           <font>
+                              <Font name="System Bold" size="10.0" />
+                           </font>
+                        </Label>
+                        <Label fx:id="selectedArtist" prefHeight="15.0" prefWidth="117.0" text="Arnob" textFill="WHITE">
+                           <font>
+                              <Font name="System Bold" size="10.0" />
+                           </font>
+                        </Label>
+                     </children>
+                     <HBox.margin>
+                        <Insets top="10.0" />
+                     </HBox.margin>
+                  </VBox>
+               </children>
+            </HBox>
             <VBox alignment="CENTER_RIGHT" prefHeight="112.0" prefWidth="46.0">
                <children>
                   <Label fx:id="curTimeLabel" text="0:00" textFill="#dacdcd" />
@@ -250,36 +276,38 @@
                   <HBox prefHeight="17.0" prefWidth="93.0" />
                </children>
             </VBox>
-            <VBox alignment="CENTER" prefHeight="112.0" prefWidth="71.0">
-               <children>
-                  <Button fx:id="enlargeButton" mnemonicParsing="false" style="-fx-background-color: transparent;">
-                     <graphic>
-                        <ImageView fitHeight="20.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
-                           <image>
-                              <Image url="@../images/enlarge_50px.png" />
-                           </image>
-                        </ImageView>
-                     </graphic>
-                  </Button>
-               </children>
-            </VBox>
          </children>
       </HBox>
    </bottom>
    <center>
-      <VBox prefHeight="512.0" prefWidth="1073.0" spacing="20.0" BorderPane.alignment="CENTER">
+      <VBox prefHeight="512.0" prefWidth="1520.0" spacing="20.0" BorderPane.alignment="CENTER">
          <children>
-            <Pane prefHeight="200.0" prefWidth="200.0" VBox.vgrow="ALWAYS" />
-            <ScrollPane prefHeight="404.0" prefWidth="1120.0" style="-fx-background-color: transparent;">
+            <Pane prefHeight="82.0" prefWidth="1520.0" VBox.vgrow="ALWAYS" />
+            <ScrollPane prefHeight="404.0" prefWidth="1520.0" style="-fx-background-color: transparent;">
                <content>
-                  <VBox prefHeight="397.0" prefWidth="707.0" spacing="10.0">
+                  <VBox fillWidth="false" prefHeight="397.0" prefWidth="1520.0" spacing="10.0">
                      <children>
-                        <ScrollPane prefHeight="261.0" prefWidth="707.0" style="-fx-background-color: transparent;" VBox.vgrow="ALWAYS">
+                        <Label text="Recently played" textFill="WHITE">
+                           <font>
+                              <Font name="Constantia" size="16.0" />
+                           </font>
                            <padding>
                               <Insets left="20.0" />
                            </padding>
+                        </Label>
+                        <ScrollPane fitToWidth="true" pannable="true" prefHeight="175.0" prefWidth="1520.0" style="-fx-background-color: transparent;" VBox.vgrow="ALWAYS">
+                          <content>
+                            <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="200.0" prefWidth="200.0">
+                                 <children>
+                                    <HBox fx:id="recentlyPlayedComponent" layoutY="6.0" prefHeight="0.0" prefWidth="0.0" spacing="10.0" styleClass="hover" stylesheets="@../css/styling.css">
+                                       <padding>
+                                          <Insets left="5.0" />
+                                       </padding>
+                                    </HBox>
+                                 </children>
+                              </AnchorPane>
+                          </content>
                         </ScrollPane>
-                        <ScrollPane prefHeight="261.0" prefWidth="707.0" style="-fx-background-color: transparent;" VBox.vgrow="ALWAYS" />
                      </children>
                   </VBox>
                </content>
