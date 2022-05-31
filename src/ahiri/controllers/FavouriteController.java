@@ -30,9 +30,9 @@ public class FavouriteController implements Initializable {
 
     
     public ObservableList<Song> songs = FXCollections.observableArrayList(
-            new Song(1,"Jao Pakhi Bolo Tare","Monpura","Apr 6,2022","3:28"),
-            new Song(2,"Onno Aloy","Onno Aloy","Apr 4,2022","4:45"),
-            new Song(3,"Amar Protichchobi","Biborton","Feb 15,2022","3:53")
+            new Song(1,"Jao Pakhi Bolo Tare","Monpura","Apr 6,2022","3:28","a","a"),
+            new Song(2,"Onno Aloy","Onno Aloy","Apr 4,2022","4:45","b","b"),
+            new Song(3,"Amar Protichchobi","Biborton","Feb 15,2022","3:53","c","c")
     );
     
     @Override

@@ -9,7 +9,7 @@
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.text.Font?>
 
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="790.0" prefWidth="1300.0" styleClass="centre_color" stylesheets="@../css/styling.css" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ahiri.controllers.FavouriteController">
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="750.0" prefWidth="1300.0" styleClass="centre_color" stylesheets="@../css/styling.css" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ahiri.controllers.FavouriteController">
    <left>
       <AnchorPane prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
          <children>
@@ -33,8 +33,8 @@
                 <TableColumn fx:id="colSerial" prefWidth="75.0" text="#" />
                 <TableColumn fx:id="colTitle" prefWidth="510.4001693725586" text="TITLE" />
                   <TableColumn fx:id="colAlbum" prefWidth="355.199951171875" text="ALBUM" />
-                  <TableColumn fx:id="colDate" prefWidth="199.9998779296875" text="DATE ADDED" />
-                  <TableColumn fx:id="colDuration" prefWidth="156.79997558593755" text="DURATION" />
+                  <TableColumn fx:id="colDate" prefWidth="249.5999755859375" text="DATE ADDED" />
+                  <TableColumn fx:id="colDuration" prefWidth="108.800048828125" text="DURATION" />
               </columns>
             </TableView>
          </children>

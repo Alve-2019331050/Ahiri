@@ -10,14 +10,12 @@
 
 .btnSignIn:hover{
     -fx-background-color : #0052B7;
+    -fx-cursor: hand;
 }
 
 .btnSignUp:hover{
     -fx-background-color : #00FFFF;
-}
-
-.primary_color{
-    -fx-background-color : #181818;
+    -fx-cursor: hand;
 }
 
 .centre_color{
@@ -68,4 +66,26 @@
 
 .bold.table-cell{
     -fx-font-weight : bold;
+}
+
+.primary_color {
+	-fx-background-color :  linear-gradient(#540901,#420802,#2e0501,#210400,#120201,#120e0e,#0f0b0b, black);
+}
+.secondary_color {
+	-fx-background-color :  #09090a;
+}
+.selected {
+	-fx-border-color : #07db4d ;
+	-fx-border-width : 0 0 0 5;	
+}
+.media-bar {
+	-fx-background-color : #111111;
+}
+
+.scroll-pane > .viewport {
+   -fx-background-color: transparent;
+}
+
+.hover{
+    -fx-cursor: hand;
 }

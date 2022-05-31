@@ -22,6 +22,11 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
+import javafx.stage.Stage;
 
 
 public class LoginSignupController implements Initializable {
@@ -95,7 +100,7 @@ public class LoginSignupController implements Initializable {
     @FXML
     private void handleSignIn(MouseEvent event) {
         if(nameField.getText().isBlank()==false && passwordField.getText().isBlank()==false){
-            validateLogin();
+            validateLogin(event);
         }else{
             showMessage(loginMessage,"Username/Password can not be empty.");
         }
@@ -163,17 +168,22 @@ public class LoginSignupController implements Initializable {
         btnSignIn.setVisible(true);
     }
 
-    private void validateLogin() {
+    private void validateLogin(MouseEvent event) {
         Connection conn = new DatabaseConnection().getConnection();
         String query = "SELECT count(1) FROM user_account WHERE BINARY username = '" + nameField.getText()
                 + "' AND BINARY password = '" + passwordField.getText() + "';";
+        
         try{
             Statement statement = conn.createStatement();
             ResultSet queryResult = statement.executeQuery(query);
-            
             if(queryResult.next()){
                 if(queryResult.getInt(1)==1){
-                    
+                    Stage stage = (Stage)((Node) event.getSource()).getScene().getWindow();
+                    Parent root = FXMLLoader.load(getClass().getResource("../fxml/Home.fxml"));
+                    Scene scene = new Scene(root);
+                    stage.setScene(scene);
+                    stage.centerOnScreen();
+                    stage.show();
                 }else{
                     showMessage(loginMessage,"Invalid login.Please try again.");
                 }
