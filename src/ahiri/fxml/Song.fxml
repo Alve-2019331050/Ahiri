@@ -2,19 +2,14 @@
 
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Label?>
-<?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
 <VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="175.0" prefWidth="143.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ahiri.controllers.SongController">
    <children>
-      <ImageView fx:id="img" fitHeight="145.0" fitWidth="143.0" pickOnBounds="true" preserveRatio="true">
-         <image>
-            <Image url="@../images/tumi%20robe%20nirobe(2).jpg" />
-         </image>
-      </ImageView>
-      <Label fx:id="songName" prefHeight="23.0" prefWidth="143.0" style="-fx-background-color: transparent;" text="  TUMI RABE NIRABE" textFill="WHITE">
+      <ImageView fx:id="img" fitHeight="145.0" fitWidth="143.0" pickOnBounds="true" preserveRatio="true" />
+      <Label fx:id="songName" prefHeight="23.0" prefWidth="143.0" style="-fx-background-color: transparent;" textFill="WHITE">
          <font>
             <Font name="System Bold" size="10.0" />
          </font>
@@ -22,7 +17,7 @@
             <Insets />
          </opaqueInsets>
       </Label>
-      <Label fx:id="artist" prefHeight="31.0" prefWidth="143.0" style="-fx-background-color: transparent;" text="  Arnob" textFill="WHITE">
+      <Label fx:id="artist" prefHeight="31.0" prefWidth="143.0" style="-fx-background-color: transparent;" textFill="WHITE">
          <font>
             <Font name="System Bold" size="10.0" />
          </font>

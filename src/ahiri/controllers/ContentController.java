@@ -30,16 +30,14 @@ public class ContentController{
         Song song = new Song(1,"TUMI RABE NIROBE","","",""," Arnob","../images/tumi robe nirobe(2).jpg");
         recentlyPlayedSongs.add(song);
         
-        for(int i=1;i<5;i++){
-            song = new Song(1,"BHALOBESHEY SHOKHI JODI NIBHRITE JOTONE","","",""," Borno Chokroborty","../images/bhalobeshey shokhi jodi nibhrite jotone.jpg");
-            recentlyPlayedSongs.add(song);
+        song = new Song(1,"BHALOBESHEY SHOKHI JODI NIBHRITE JOTONE","","",""," Borno Chokroborty","../images/bhalobeshey shokhi jodi nibhrite jotone.jpg");
+        recentlyPlayedSongs.add(song);
             
-            song = new Song(1,"AMI CHINIGO CHINI TOMARE","","",""," Borno Chokroborty","../images/ami chinigo chini tomare.jpg");
-            recentlyPlayedSongs.add(song);
-        }
+        song = new Song(1,"AMI CHINIGO CHINI TOMARE","","",""," Borno Chokroborty","../images/ami chinigo chini tomare.jpg");
+        recentlyPlayedSongs.add(song);
         
-//        song = new Song(1,"BHALOBESHEY SHOKHI JODI NIBHRITE JOTONE","","",""," Borno Chokroborty","../images/bhalobeshey shokhi jodi nibhrite jotone.jpg");
-//        recentlyPlayedSongs.add(song);
+        song = new Song(1,"AMI KAN PETE ROI","","",""," Borno Chokroborty","../images/ami kan petey roi.jpg");
+        recentlyPlayedSongs.add(song);
         
         return recentlyPlayedSongs;
     }

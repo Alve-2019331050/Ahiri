@@ -103,8 +103,8 @@ public class MediaBarController implements Initializable {
         playlist = new ArrayList<File>();
         directory = new File(path);
         
-        File starting = new File(path+"\\"+selectedSongName.getText()+".mp3");
-        playlist.add(starting);
+//        File starting = new File(path+"\\"+selectedSongName.getText()+".mp3");
+//        playlist.add(starting);
         
         try{
             ContentController controller = new ContentController();
@@ -138,10 +138,10 @@ public class MediaBarController implements Initializable {
                         for(File files: file){
                             String name = selectedSongName.getText();
                             if((path+"\\"+name+".mp3").equals(files.toString())){
+                                System.out.println(name);
                                 playlist.add(files);
                                 media = new Media(files.toURI().toString());
                                 mediaPlayer = new MediaPlayer(media);
-                                System.out.println(mediaPlayer);
                                 volumeSlider.valueProperty().addListener(new ChangeListener<Number>() {
                     
                                     @Override
@@ -190,6 +190,7 @@ public class MediaBarController implements Initializable {
         
                 initiateTimer();
                 mediaPlayer.setVolume(volumeSlider.getValue()*0.01);
+                System.out.println(media);
                 mediaPlayer.play();
     }
 
