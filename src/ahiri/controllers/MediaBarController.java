@@ -10,6 +10,8 @@ import java.util.List;
 import java.util.ResourceBundle;
 import java.util.Timer;
 import java.util.TimerTask;
+import java.util.concurrent.Callable;
+import javafx.beans.binding.Bindings;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.ObservableList;
@@ -33,6 +35,7 @@ import javafx.scene.layout.VBox;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import javafx.stage.Stage;
+import javafx.util.Duration;
 
 
 public class MediaBarController implements Initializable {
@@ -51,10 +54,6 @@ public class MediaBarController implements Initializable {
     private Button btnFavourite;
     @FXML
     private Button previousButton;
-    @FXML
-    private Button playButton;
-    @FXML
-    private Button pauseButton;
     @FXML
     private Button stopButton;
     @FXML
@@ -94,8 +93,15 @@ public class MediaBarController implements Initializable {
     private Label selectedSongName;
     @FXML
     private Label selectedArtist;
+    
+    Image imgPause;
+    Image imgPlay;
 
-    String path = new File("C:\\Users\\ASUS\\OneDrive\\Documents\\NetBeansProjects\\Ahiri\\src\\ahiri\\music").getAbsolutePath();
+    String path = new File("src/ahiri/music").getAbsolutePath();
+    @FXML
+    private ImageView imgPlayPause;
+    
+    boolean isPlaying;
     
     @Override
     public void initialize(URL url, ResourceBundle rb) { 
@@ -134,14 +140,34 @@ public class MediaBarController implements Initializable {
                                 selectedArtist.setText(artist);
                             }
                         }
+                        
+                        // handle if music is already playing
+                        
+                        if(isPlaying){
+                            imgPlayPause.setImage(imgPlay);
+                            cancelTimer();
+                            mediaPlayer.pause();
+                            isPlaying = false;
+                        }
+                        
                         file=directory.listFiles();
                         for(File files: file){
                             String name = selectedSongName.getText();
                             if((path+"\\"+name+".mp3").equals(files.toString())){
-                                System.out.println(name);
                                 playlist.add(files);
                                 media = new Media(files.toURI().toString());
                                 mediaPlayer = new MediaPlayer(media);
+                                
+                                bindCurTimeLabel();
+                                
+                                mediaPlayer.totalDurationProperty().addListener(new ChangeListener<Duration>() {
+                                    @Override
+                                    public void changed(ObservableValue<? extends Duration> observable, Duration oldValue, Duration newValue) {
+                                        musicSlider.setMax(newValue.toSeconds());
+                                        endTimeLabel.setText(getTime(newValue));
+                                    }
+                                });
+                                
                                 volumeSlider.valueProperty().addListener(new ChangeListener<Number>() {
                     
                                     @Override
@@ -154,9 +180,13 @@ public class MediaBarController implements Initializable {
                     }
                 });
             }
-            musicSlider.setMin(0);
+            musicSlider.setValue(0);
+            imgPause = new Image(new File("src/ahiri/images/pause_button_50px.png").toURI().toString());
+            imgPlay = new Image(new File("src/ahiri/images/circled_play_50px.png").toURI().toString());
             curTimeLabel.setText("00.00");
             endTimeLabel.setText("00.00");
+            isPlaying = false;
+            
         }catch(IOException e){
             e.printStackTrace();
         }
@@ -184,17 +214,24 @@ public class MediaBarController implements Initializable {
  
 	}
     }
-
+    
     @FXML
     private void playMusic(ActionEvent event) {
         
-                initiateTimer();
-                mediaPlayer.setVolume(volumeSlider.getValue()*0.01);
-                System.out.println(media);
-                mediaPlayer.play();
+                if(isPlaying == false){
+                    imgPlayPause.setImage(imgPause);
+                    initiateTimer();
+                    mediaPlayer.setVolume(volumeSlider.getValue()*0.01);
+                    mediaPlayer.play();
+                    isPlaying = true;
+                }else{
+                    imgPlayPause.setImage(imgPlay);
+                    pauseMusic(event);
+                    isPlaying = false;
+                }
+                
     }
 
-    @FXML
     private void pauseMusic(ActionEvent event) {
         cancelTimer();
 	mediaPlayer.pause();
@@ -261,5 +298,27 @@ public class MediaBarController implements Initializable {
         stage.setScene(scene);
         stage.centerOnScreen();
         stage.show();
+    }
+
+    private void bindCurTimeLabel() {
+        curTimeLabel.textProperty().bind(Bindings.createStringBinding(new Callable<String>(){
+            @Override
+            public String call() throws Exception {
+                return getTime(mediaPlayer.getCurrentTime());
+            }
+            
+        }, mediaPlayer.currentTimeProperty()));
+    }
+    
+    public String getTime(Duration time){
+        int hours = (int)time.toHours();
+        int minutes = ((int)time.toMinutes())%60;
+        int seconds = ((int)time.toSeconds())%60;
+        
+        if(hours>0){
+            return String.format("%d:%02d:%02d", hours,minutes,seconds);
+        }else{
+            return String.format("%02d:%02d", minutes,seconds);
+        }
     }
 }
