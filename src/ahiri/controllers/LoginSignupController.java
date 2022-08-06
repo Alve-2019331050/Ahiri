@@ -22,6 +22,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Parent;
@@ -181,6 +182,14 @@ public class LoginSignupController implements Initializable {
                     Stage stage = (Stage)((Node) event.getSource()).getScene().getWindow();
                     Parent root = FXMLLoader.load(getClass().getResource("../fxml/Home.fxml"));
                     Scene scene = new Scene(root);
+                    scene.setOnMouseClicked(new EventHandler<MouseEvent>() {
+                        @Override
+                        public void handle(MouseEvent event) {
+                            if(event.getClickCount()==2){
+                                stage.setFullScreen(true);
+                            }
+                        }
+                    });
                     stage.setScene(scene);
                     stage.centerOnScreen();
                     stage.show();

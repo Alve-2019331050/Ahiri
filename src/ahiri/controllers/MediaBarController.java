@@ -25,6 +25,7 @@ import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.Slider;
 import javafx.scene.image.Image;
@@ -69,6 +70,8 @@ public class MediaBarController implements Initializable {
     File[] file;
  
     private ArrayList<File> playlist;
+    
+    private String speeds[]={"0.25","0.50","0.75","1","1.25","1.5","1.75","2"};
  
     private int songCount;
  
@@ -93,6 +96,8 @@ public class MediaBarController implements Initializable {
     private Label selectedSongName;
     @FXML
     private Label selectedArtist;
+    @FXML
+    private ComboBox speedBox;
     
     Image imgPause;
     Image imgPlay;
@@ -113,6 +118,11 @@ public class MediaBarController implements Initializable {
 //        playlist.add(starting);
         
         try{
+            
+            for(int i=0;i<speeds.length;i++){
+                speedBox.getItems().add(speeds[i]);
+            }
+            
             ContentController controller = new ContentController();
             List<Song> recentlyPlayed = controller.getRecentlyPlayed();
             
@@ -155,16 +165,40 @@ public class MediaBarController implements Initializable {
                             String name = selectedSongName.getText();
                             if((path+"\\"+name+".mp3").equals(files.toString())){
                                 playlist.add(files);
+                                songCount=playlist.size()-1;
                                 media = new Media(files.toURI().toString());
                                 mediaPlayer = new MediaPlayer(media);
                                 
                                 bindCurTimeLabel();
                                 
+                                
                                 mediaPlayer.totalDurationProperty().addListener(new ChangeListener<Duration>() {
                                     @Override
                                     public void changed(ObservableValue<? extends Duration> observable, Duration oldValue, Duration newValue) {
+                                        musicSlider.setValue(0.0);
                                         musicSlider.setMax(newValue.toSeconds());
                                         endTimeLabel.setText(getTime(newValue));
+                                    }
+                                });
+                                
+                                mediaPlayer.currentTimeProperty().addListener(new ChangeListener<Duration>(){
+                                    @Override
+                                    public void changed(ObservableValue<? extends Duration> observable, Duration oldValue, Duration newValue) {
+                                        musicSlider.setValue(newValue.toSeconds());
+                                    }
+                                });
+                                
+                                musicSlider.setOnMousePressed(new EventHandler<MouseEvent>() {
+                                    @Override
+                                    public void handle(MouseEvent event) {
+                                        mediaPlayer.seek(Duration.seconds(musicSlider.getValue()));
+                                    }
+                                });
+                                
+                                musicSlider.setOnMouseDragged(new EventHandler<MouseEvent>() {
+                                    @Override
+                                    public void handle(MouseEvent event) {
+                                        mediaPlayer.seek(Duration.seconds(musicSlider.getValue()));
                                     }
                                 });
                                 
@@ -180,7 +214,7 @@ public class MediaBarController implements Initializable {
                     }
                 });
             }
-            musicSlider.setValue(0);
+            
             imgPause = new Image(new File("src/ahiri/images/pause_button_50px.png").toURI().toString());
             imgPlay = new Image(new File("src/ahiri/images/circled_play_50px.png").toURI().toString());
             curTimeLabel.setText("00.00");
@@ -199,20 +233,48 @@ public class MediaBarController implements Initializable {
             --songCount;
             stopMusic(event);
             if (running) cancelTimer();
-		media = new Media(playlist.get(songCount).toURI().toString());
-		mediaPlayer = new MediaPlayer(media);
-		playMusic(event);
- 
-	} else {
+            media = new Media(playlist.get(songCount).toURI().toString());
+            mediaPlayer = new MediaPlayer(media);   
+        }else {
  
             stopMusic(event);
             songCount = playlist.size()-1;
             if (running) cancelTimer();
             media = new Media(playlist.get(songCount).toURI().toString());
             mediaPlayer = new MediaPlayer(media);
-            playMusic(event);
- 
 	}
+            
+        mediaPlayer.totalDurationProperty().addListener(new ChangeListener<Duration>() {
+            @Override
+            public void changed(ObservableValue<? extends Duration> observable, Duration oldValue, Duration newValue) {
+                musicSlider.setValue(0.0);
+                musicSlider.setMax(newValue.toSeconds());
+                endTimeLabel.setText(getTime(newValue));
+            }
+        });
+                                
+        mediaPlayer.currentTimeProperty().addListener(new ChangeListener<Duration>(){
+            @Override
+            public void changed(ObservableValue<? extends Duration> observable, Duration oldValue, Duration newValue) {
+               musicSlider.setValue(newValue.toSeconds());
+            }
+        });
+                                
+        musicSlider.setOnMousePressed(new EventHandler<MouseEvent>() {
+           @Override
+           public void handle(MouseEvent event) {
+              mediaPlayer.seek(Duration.seconds(musicSlider.getValue()));
+           }
+        });
+                                
+        musicSlider.setOnMouseDragged(new EventHandler<MouseEvent>() {
+           @Override
+           public void handle(MouseEvent event) {
+              mediaPlayer.seek(Duration.seconds(musicSlider.getValue()));
+           }
+        });
+            
+        playMusic(event);
     }
     
     @FXML
@@ -239,6 +301,10 @@ public class MediaBarController implements Initializable {
 
     @FXML
     private void stopMusic(ActionEvent event) {
+        if(isPlaying){
+            imgPlayPause.setImage(imgPlay);
+            isPlaying = false;
+        }
         mediaPlayer.stop();
     }
 
@@ -251,8 +317,6 @@ public class MediaBarController implements Initializable {
             if (running) cancelTimer();
             media = new Media(playlist.get(songCount).toURI().toString());
             mediaPlayer = new MediaPlayer(media);
-            playMusic(event);
- 
         } else {
  
             stopMusic(event);
@@ -260,13 +324,45 @@ public class MediaBarController implements Initializable {
             if (running) cancelTimer();
             media = new Media(playlist.get(songCount).toURI().toString());
             mediaPlayer = new MediaPlayer(media);
-            playMusic(event);
- 
 	}
+           
+        mediaPlayer.totalDurationProperty().addListener(new ChangeListener<Duration>() {
+            @Override
+            public void changed(ObservableValue<? extends Duration> observable, Duration oldValue, Duration newValue) {
+                musicSlider.setValue(0.0);
+                musicSlider.setMax(newValue.toSeconds());
+                endTimeLabel.setText(getTime(newValue));
+            }
+        });
+                                
+        mediaPlayer.currentTimeProperty().addListener(new ChangeListener<Duration>(){
+            @Override
+            public void changed(ObservableValue<? extends Duration> observable, Duration oldValue, Duration newValue) {
+               musicSlider.setValue(newValue.toSeconds());
+            }
+        });
+                                
+        musicSlider.setOnMousePressed(new EventHandler<MouseEvent>() {
+           @Override
+           public void handle(MouseEvent event) {
+              mediaPlayer.seek(Duration.seconds(musicSlider.getValue()));
+           }
+        });
+                                
+        musicSlider.setOnMouseDragged(new EventHandler<MouseEvent>() {
+           @Override
+           public void handle(MouseEvent event) {
+              mediaPlayer.seek(Duration.seconds(musicSlider.getValue()));
+           }
+        });
+        
+        playMusic(event);
     }
 
     @FXML
     private void repeatMusic(ActionEvent event) {
+        initiateTimer();
+        mediaPlayer.seek(Duration.seconds(0));
     }
 
     private void initiateTimer() {
@@ -320,5 +416,10 @@ public class MediaBarController implements Initializable {
         }else{
             return String.format("%02d:%02d", minutes,seconds);
         }
+    }
+    
+    @FXML
+    private void changeSpeed(ActionEvent event) {
+        mediaPlayer.setRate(Double.parseDouble((String)speedBox.getValue()));
     }
 }
