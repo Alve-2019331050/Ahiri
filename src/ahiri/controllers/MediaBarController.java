@@ -98,7 +98,6 @@ public class MediaBarController implements Initializable {
     private Label selectedArtist;
     @FXML
     private ComboBox speedBox;
-    
     Image imgPause;
     Image imgPlay;
 
@@ -395,7 +394,16 @@ public class MediaBarController implements Initializable {
         stage.centerOnScreen();
         stage.show();
     }
-
+    
+    @FXML
+    private void navigateLibrary(MouseEvent event) throws IOException {
+        Stage stage = (Stage)((Node) event.getSource()).getScene().getWindow();
+        Parent root = FXMLLoader.load(getClass().getResource("../fxml/Library.fxml"));
+        Scene scene = new Scene(root);
+        stage.setScene(scene);
+        stage.centerOnScreen();
+        stage.show();
+    }
     private void bindCurTimeLabel() {
         curTimeLabel.textProperty().bind(Bindings.createStringBinding(new Callable<String>(){
             @Override

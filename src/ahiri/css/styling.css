@@ -91,7 +91,6 @@
 }
 
 .combo-box{
-    -fx-background-color : transparent;
     -fx-font-weight: bolder;
 }
 .combo-box .combo-box-popup .list-cell:hover{
@@ -108,4 +107,19 @@
 .combo-box .combo-box-popup .list-cell {
     -fx-background-color: transparent ;
     -fx-text-fill: white ;
+}
+.library_primary_color {
+    -fx-background-color : linear-gradient(#020f0f,#021211,#011413,#011716,#011a18,#012120,#01302e,#023835,#043835,#063633);
+}
+.library_secondary_color {
+    -fx-background-color : linear-gradient(#084d32,#053825,#02301f,#011a10,#01170f);
+}
+
+.libVolumeSlider {
+    -fx-pref-width : 400px;
+}
+
+.libVolumeSlider .track {
+    -fx-background-color : red;
+    -fx-background-radius : 10;
 }

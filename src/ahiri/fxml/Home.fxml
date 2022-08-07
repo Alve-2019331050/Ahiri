@@ -68,7 +68,7 @@
                   </HBox>
                   <HBox alignment="CENTER" prefHeight="61.0" prefWidth="200.0">
                      <children>
-                        <Button fx:id="btnLibrary" mnemonicParsing="false" style="-fx-background-color: transparent;">
+                        <Button fx:id="btnLibrary" mnemonicParsing="false" onMouseClicked="#navigateLibrary" style="-fx-background-color: transparent;">
                            <graphic>
                               <ImageView fitHeight="35.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
                                  <image>
