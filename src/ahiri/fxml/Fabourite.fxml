@@ -1,43 +1,308 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Separator?>
+<?import javafx.scene.control.Slider?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="750.0" prefWidth="1300.0" styleClass="centre_color" stylesheets="@../css/styling.css" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ahiri.controllers.FavouriteController">
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="725.0" prefWidth="1350.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ahiri.controllers.FavouriteController">
    <left>
-      <AnchorPane prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
+      <VBox prefHeight="647.0" prefWidth="230.0" styleClass="secondary_color" stylesheets="@../css/styling.css" BorderPane.alignment="CENTER">
          <children>
-            <ImageView fitHeight="211.0" fitWidth="208.0" layoutX="55.0" layoutY="86.0" pickOnBounds="true" preserveRatio="true">
+            <Button fx:id="btnMore" mnemonicParsing="false" style="-fx-background-color: transparent;">
+               <graphic>
+                  <ImageView fitHeight="25.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../images/more_50px.png" />
+                     </image>
+                  </ImageView>
+               </graphic>
+            </Button>
+            <VBox prefHeight="123.0" prefWidth="230.0" spacing="10.0">
+               <children>
+                  <HBox alignment="CENTER" prefHeight="61.0" prefWidth="230.0" styleClass="selected" stylesheets="@../css/styling.css">
+                     <children>
+                        <Button fx:id="btnHome" mnemonicParsing="false" style="-fx-background-color: transparent;">
+                           <graphic>
+                              <ImageView fitHeight="30.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
+                                 <image>
+                                    <Image url="@../images/home_50px.png" />
+                                 </image>
+                              </ImageView>
+                           </graphic>
+                        </Button>
+                        <Label onMouseClicked="#navigateHome" prefHeight="49.0" prefWidth="181.0" styleClass="hover" stylesheets="@../css/styling.css" text="  Home" textFill="WHITE">
+                           <font>
+                              <Font name="Constantia Bold" size="15.0" />
+                           </font>
+                        </Label>
+                     </children>
+                  </HBox>
+                  <HBox alignment="CENTER" prefHeight="61.0" prefWidth="230.0">
+                     <children>
+                        <Button fx:id="btnSearch" mnemonicParsing="false" style="-fx-background-color: transparent;">
+                           <graphic>
+                              <ImageView fitHeight="30.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
+                                 <image>
+                                    <Image url="@../images/search_50px.png" />
+                                 </image>
+                              </ImageView>
+                           </graphic>
+                        </Button>
+                        <Label prefHeight="24.0" prefWidth="179.0" styleClass="hover" stylesheets="@../css/styling.css" text="  Search" textFill="#e1dbdb">
+                           <font>
+                              <Font name="Constantia" size="15.0" />
+                           </font>
+                        </Label>
+                     </children>
+                  </HBox>
+                  <HBox alignment="CENTER" prefHeight="61.0" prefWidth="200.0">
+                     <children>
+                        <Button fx:id="btnLibrary" mnemonicParsing="false" style="-fx-background-color: transparent;">
+                           <graphic>
+                              <ImageView fitHeight="35.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
+                                 <image>
+                                    <Image url="@../images/music_library_50px.png" />
+                                 </image>
+                              </ImageView>
+                           </graphic>
+                        </Button>
+                        <Label prefHeight="24.0" prefWidth="174.0" styleClass="hover" stylesheets="@../css/styling.css" text="  Your library" textFill="#e1dbdb">
+                           <font>
+                              <Font name="Constantia" size="15.0" />
+                           </font>
+                        </Label>
+                     </children>
+                  </HBox>
+               </children>
+               <padding>
+                  <Insets top="20.0" />
+               </padding>
+            </VBox>
+            <VBox prefHeight="89.0" prefWidth="230.0" spacing="10.0">
+               <children>
+                  <HBox alignment="CENTER" prefHeight="61.0" prefWidth="230.0">
+                     <children>
+                        <Button fx:id="btnCreatePlaylist" mnemonicParsing="false" style="-fx-background-color: transparent;">
+                           <graphic>
+                              <ImageView fitHeight="35.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
+                                 <image>
+                                    <Image url="@../images/add_new_50px.png" />
+                                 </image>
+                              </ImageView>
+                           </graphic>
+                        </Button>
+                        <Label prefHeight="17.0" prefWidth="186.0" styleClass="hover" stylesheets="@../css/styling.css" text="  Create  Playlist" textFill="#e1dbdb">
+                           <font>
+                              <Font name="Constantia" size="15.0" />
+                           </font>
+                        </Label>
+                     </children>
+                  </HBox>
+                  <HBox alignment="CENTER" prefHeight="61.0" prefWidth="200.0">
+                     <children>
+                        <Button fx:id="btnFavourite" mnemonicParsing="false" style="-fx-background-color: transparent;">
+                           <graphic>
+                              <ImageView fitHeight="40.0" fitWidth="35.0" pickOnBounds="true" preserveRatio="true">
+                                 <image>
+                                    <Image url="@../images/Favorite_100px.png" />
+                                 </image>
+                              </ImageView>
+                           </graphic>
+                        </Button>
+                        <Label prefHeight="17.0" prefWidth="182.0" styleClass="hover" stylesheets="@../css/styling.css" text="  Favourite" textFill="#e1dbdb">
+                           <font>
+                              <Font name="Constantia" size="15.0" />
+                           </font>
+                        </Label>
+                     </children>
+                     <padding>
+                        <Insets bottom="20.0" />
+                     </padding>
+                  </HBox>
+               </children>
+               <padding>
+                  <Insets top="20.0" />
+               </padding>
+            </VBox>
+            <Separator prefWidth="200.0" />
+         </children>
+      </VBox>
+   </left>
+   <bottom>
+      <HBox prefHeight="112.0" prefWidth="200.0" styleClass="media-bar" stylesheets="@../css/styling.css" BorderPane.alignment="CENTER">
+         <children>
+            <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" spacing="10.0">
+               <children>
+                  <ImageView fx:id="selectedImg" fitHeight="60.0" fitWidth="60.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../images/tumi%20robe%20nirobe(2).jpg" />
+                     </image>
+                  </ImageView>
+                  <VBox prefHeight="200.0" prefWidth="100.0" spacing="5.0">
+                     <children>
+                        <Label fx:id="selectedSongName" prefHeight="15.0" prefWidth="117.0" text="TUMI RABE NIROBE" textFill="WHITE">
+                           <font>
+                              <Font name="System Bold" size="10.0" />
+                           </font>
+                        </Label>
+                        <Label fx:id="selectedArtist" prefHeight="15.0" prefWidth="117.0" text="Arnob" textFill="WHITE">
+                           <font>
+                              <Font name="System Bold" size="10.0" />
+                           </font>
+                        </Label>
+                     </children>
+                     <HBox.margin>
+                        <Insets top="10.0" />
+                     </HBox.margin>
+                  </VBox>
+               </children>
+            </HBox>
+            <VBox alignment="CENTER_RIGHT" prefHeight="112.0" prefWidth="46.0">
+               <children>
+                  <Label fx:id="curTimeLabel" text="0:00" textFill="#dacdcd" />
+               </children>
+            </VBox>
+            <VBox prefHeight="112.0" prefWidth="671.0">
+               <children>
+                  <VBox prefHeight="84.0" prefWidth="671.0">
+                     <children>
+                        <HBox alignment="CENTER" prefHeight="49.0" prefWidth="671.0" spacing="10.0">
+                           <children>
+                              <Button fx:id="previousButton" mnemonicParsing="false" onAction="#previousMusic" style="-fx-background-color: transparent;" styleClass="hover" stylesheets="@../css/styling.css">
+                                 <font>
+                                    <Font size="15.0" />
+                                 </font>
+                                 <graphic>
+                                    <ImageView fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true">
+                                       <image>
+                                          <Image url="@../images/previous_50px.png" />
+                                       </image>
+                                    </ImageView>
+                                 </graphic>
+                              </Button>
+                              <Button mnemonicParsing="false" onAction="#playMusic" style="-fx-background-color: transparent;" styleClass="hover" stylesheets="@../css/styling.css">
+                                 <graphic>
+                                    <ImageView fx:id="imgPlayPause" fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true">
+                                       <image>
+                                          <Image url="@../images/circled_play_50px.png" />
+                                       </image>
+                                    </ImageView>
+                                 </graphic>
+                              </Button>
+                              <Button fx:id="stopButton" mnemonicParsing="false" onAction="#stopMusic" style="-fx-background-color: transparent;" styleClass="hover" stylesheets="@../css/styling.css">
+                                 <graphic>
+                                    <ImageView fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true">
+                                       <image>
+                                          <Image url="@../images/stop_circled_50px.png" />
+                                       </image>
+                                    </ImageView>
+                                 </graphic>
+                              </Button>
+                              <Button fx:id="nextButton" mnemonicParsing="false" onAction="#nextMusic" style="-fx-background-color: transparent;" styleClass="hover" stylesheets="@../css/styling.css">
+                                 <graphic>
+                                    <ImageView fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true">
+                                       <image>
+                                          <Image url="@../images/next_track_50px.png" />
+                                       </image>
+                                    </ImageView>
+                                 </graphic>
+                              </Button>
+                              <Button fx:id="repeatButton" mnemonicParsing="false" onAction="#repeatMusic" style="-fx-background-color: transparent;" styleClass="hover" stylesheets="@../css/styling.css">
+                                 <graphic>
+                                    <ImageView fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true">
+                                       <image>
+                                          <Image url="@../images/repeat_50px.png" />
+                                       </image>
+                                    </ImageView>
+                                 </graphic>
+                              </Button>
+                           </children>
+                        </HBox>
+                     </children>
+                  </VBox>
+                  <VBox prefHeight="71.0" prefWidth="671.0">
+                     <children>
+                        <HBox prefHeight="23.0" prefWidth="671.0">
+                           <children>
+                              <Slider fx:id="musicSlider" prefHeight="14.0" prefWidth="672.0" styleClass="hover" stylesheets="@../css/styling.css" />
+                           </children>
+                        </HBox>
+                     </children>
+                  </VBox>
+               </children>
+            </VBox>
+            <VBox alignment="CENTER_LEFT" prefHeight="112.0" prefWidth="144.0">
+               <children>
+                  <Label fx:id="endTimeLabel" text="5:00" textFill="#c9c4c4" />
+               </children>
+            </VBox>
+            <VBox alignment="CENTER_LEFT" prefHeight="112.0" prefWidth="53.0">
+               <children>
+                  <Button fx:id="volumeButton" mnemonicParsing="false" prefHeight="33.0" prefWidth="21.0" style="-fx-background-color: transparent;">
+                     <graphic>
+                        <ImageView fitHeight="37.0" fitWidth="25.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@../images/audacity_50px.png" />
+                           </image>
+                        </ImageView>
+                     </graphic>
+                  </Button>
+               </children>
+            </VBox>
+            <VBox prefHeight="200.0" prefWidth="100.0">
+               <children>
+                  <Slider fx:id="volumeSlider" prefHeight="130.0" prefWidth="93.0" styleClass="hover" stylesheets="@../css/styling.css" value="25.0" />
+                  <HBox prefHeight="17.0" prefWidth="93.0" />
+               </children>
+            </VBox>
+            <ComboBox fx:id="speedBox" onAction="#changeSpeed" prefHeight="16.0" prefWidth="100.0" promptText="1X" styleClass="hover" stylesheets="@../css/styling.css">
+               <padding>
+                  <Insets top="45.0" />
+               </padding>
+            </ComboBox>
+         </children>
+      </HBox>
+   </bottom>
+   <center>
+      <AnchorPane prefHeight="200.0" prefWidth="200.0" styleClass="centre_color" stylesheets="@../css/styling.css" BorderPane.alignment="CENTER">
+         <children>
+            <ImageView fitHeight="211.0" fitWidth="208.0" layoutX="30.0" layoutY="32.0" pickOnBounds="true" preserveRatio="true">
                <image>
                   <Image url="@../images/love.jpg" />
                </image>
             </ImageView>
-            <Label layoutX="291.0" layoutY="114.0" prefHeight="94.0" prefWidth="417.0" text="Favourite" textFill="WHITE">
+            <Label layoutX="256.0" layoutY="41.0" prefHeight="94.0" prefWidth="417.0" text="Favourite" textFill="WHITE">
                <font>
                   <Font name="System Bold" size="64.0" />
                </font>
             </Label>
-            <Label layoutX="299.0" layoutY="211.0" prefHeight="33.0" prefWidth="212.0" text="x songs" textFill="WHITE">
+            <Label layoutX="262.0" layoutY="128.0" prefHeight="33.0" prefWidth="212.0" text="x songs" textFill="WHITE">
                <font>
                   <Font size="20.0" />
                </font>
             </Label>
-            <TableView fx:id="tableViewFavourite" layoutX="-1.0" layoutY="380.0" prefHeight="413.0" prefWidth="1299.0">
+            <TableView fx:id="tableViewFavourite" layoutX="14.0" layoutY="329.0" prefHeight="283.0" prefWidth="1025.0">
               <columns>
                 <TableColumn fx:id="colSerial" prefWidth="75.0" text="#" />
-                <TableColumn fx:id="colTitle" prefWidth="510.4001693725586" text="TITLE" />
-                  <TableColumn fx:id="colAlbum" prefWidth="355.199951171875" text="ALBUM" />
-                  <TableColumn fx:id="colDate" prefWidth="249.5999755859375" text="DATE ADDED" />
-                  <TableColumn fx:id="colDuration" prefWidth="108.800048828125" text="DURATION" />
+                <TableColumn fx:id="colTitle" prefWidth="316.8000259399414" text="TITLE" />
+                  <TableColumn fx:id="colAlbum" prefWidth="185.59994506835938" text="ALBUM" />
+                  <TableColumn fx:id="colDate" prefWidth="239.199951171875" text="DATE ADDED" />
+                  <TableColumn fx:id="colDuration" prefWidth="207.1999755859374" text="DURATION" />
               </columns>
             </TableView>
          </children>
       </AnchorPane>
-   </left>
+   </center>
 </BorderPane>
