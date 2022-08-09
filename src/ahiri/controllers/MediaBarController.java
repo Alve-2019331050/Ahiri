@@ -1,16 +1,23 @@
 
 package ahiri.controllers;
 
+import ahiri.Artist;
+import ahiri.DatabaseConnection;
 import ahiri.Song;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.concurrent.Callable;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.beans.binding.Bindings;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -28,6 +35,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.Slider;
+import javafx.scene.control.ToggleButton;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
@@ -89,7 +97,6 @@ public class MediaBarController implements Initializable {
     private Slider musicSlider;
     @FXML
     private HBox recentlyPlayedComponent;
-    private HBox favouriteComponent;
     @FXML
     private ImageView selectedImg;
     @FXML
@@ -99,6 +106,9 @@ public class MediaBarController implements Initializable {
     @FXML
     private ComboBox speedBox;
     
+    ContentController controller;
+    List<Song> recentlyPlayed;
+    
     Image imgPause;
     Image imgPlay;
 
@@ -107,6 +117,10 @@ public class MediaBarController implements Initializable {
     private ImageView imgPlayPause;
     
     boolean isPlaying;
+    @FXML
+    private ToggleButton favBtn;
+    
+    static Artist artist = new Artist();
     
     @Override
     public void initialize(URL url, ResourceBundle rb) { 
@@ -114,8 +128,13 @@ public class MediaBarController implements Initializable {
         playlist = new ArrayList<File>();
         directory = new File(path);
         
-//        File starting = new File(path+"\\"+selectedSongName.getText()+".mp3");
-//        playlist.add(starting);
+        /*
+            Adding initial song and artist name
+        */
+        artist.add("TUMI RABE NIROBE"," Arnob");
+        artist.add("BHALOBESHEY SHOKHI JODI NIBHRITE JOTONE"," Borno Chokroborty");
+        artist.add("AMI CHINIGO CHINI TOMARE"," Borno Chokroborty");
+        artist.add("AMI KAN PETE ROI"," Borno Chokroborty");
         
         try{
             
@@ -123,8 +142,8 @@ public class MediaBarController implements Initializable {
                 speedBox.getItems().add(speeds[i]);
             }
             
-            ContentController controller = new ContentController();
-            List<Song> recentlyPlayed = controller.getRecentlyPlayed();
+            controller = new ContentController();
+            recentlyPlayed = controller.getRecentlyPlayed();
             
             for(int i=0;i<recentlyPlayed.size();i++){
                 FXMLLoader loader = new FXMLLoader();
@@ -151,6 +170,15 @@ public class MediaBarController implements Initializable {
                             }
                         }
                         
+                        /*
+                            Manage change of favourite button
+                        */
+                        if(checkDB()){
+                            favBtn.setStyle("-fx-background-color: #039BE5;");
+                        }else{
+                            favBtn.setStyle("-fx-background-color: white;");
+                        }
+                        
                         // handle if music is already playing
                         
                         if(isPlaying){
@@ -170,7 +198,6 @@ public class MediaBarController implements Initializable {
                                 mediaPlayer = new MediaPlayer(media);
                                 
                                 bindCurTimeLabel();
-                                
                                 
                                 mediaPlayer.totalDurationProperty().addListener(new ChangeListener<Duration>() {
                                     @Override
@@ -243,7 +270,29 @@ public class MediaBarController implements Initializable {
             media = new Media(playlist.get(songCount).toURI().toString());
             mediaPlayer = new MediaPlayer(media);
 	}
-            
+        /*
+            Manage change of thumbnail
+        */
+        
+        String previous = playlist.get(songCount).toString();
+        String name = previous.substring(path.length()+1, previous.length()-4);
+        selectedSongName.setText(name);
+        Image img = new Image(new File("src/ahiri/images/"+name.toLowerCase()+".jpg").toURI().toString());
+        selectedImg.setImage(img);
+        String artistName = artist.getName(name);
+        selectedArtist.setText(artistName);
+        
+        insertDB();
+        fillPane();
+        /*
+            Manage change of favourite button
+        */
+        if(checkDB()){
+            favBtn.setStyle("-fx-background-color: #039BE5;");
+        }else{
+            favBtn.setStyle("-fx-background-color: white;");
+        }
+        bindCurTimeLabel();
         mediaPlayer.totalDurationProperty().addListener(new ChangeListener<Duration>() {
             @Override
             public void changed(ObservableValue<? extends Duration> observable, Duration oldValue, Duration newValue) {
@@ -280,18 +329,19 @@ public class MediaBarController implements Initializable {
     @FXML
     private void playMusic(ActionEvent event) {
         
-                if(isPlaying == false){
-                    imgPlayPause.setImage(imgPause);
-                    initiateTimer();
-                    mediaPlayer.setVolume(volumeSlider.getValue()*0.01);
-                    mediaPlayer.play();
-                    isPlaying = true;
-                }else{
-                    imgPlayPause.setImage(imgPlay);
-                    pauseMusic(event);
-                    isPlaying = false;
-                }
-                
+        if(isPlaying == false){
+            imgPlayPause.setImage(imgPause);
+            initiateTimer();
+            mediaPlayer.setVolume(volumeSlider.getValue()*0.01);
+            mediaPlayer.play();
+            insertDB();
+            fillPane();
+            isPlaying = true;
+        }else{
+            imgPlayPause.setImage(imgPlay);
+            pauseMusic(event);
+            isPlaying = false;
+        }       
     }
 
     private void pauseMusic(ActionEvent event) {
@@ -325,7 +375,30 @@ public class MediaBarController implements Initializable {
             media = new Media(playlist.get(songCount).toURI().toString());
             mediaPlayer = new MediaPlayer(media);
 	}
-           
+        
+        /*
+            Manage change of thumbnail
+        */
+        
+        String previous = playlist.get(songCount).toString();
+        String name = previous.substring(path.length()+1, previous.length()-4);
+        selectedSongName.setText(name);
+        Image img = new Image(new File("src/ahiri/images/"+name.toLowerCase()+".jpg").toURI().toString());
+        selectedImg.setImage(img);
+        String artistName = artist.getName(name);
+        selectedArtist.setText(artistName);
+        
+        insertDB();
+        fillPane();
+        /*
+            Manage change of favourite button
+        */
+        if(checkDB()){
+            favBtn.setStyle("-fx-background-color: #039BE5;");
+        }else{
+            favBtn.setStyle("-fx-background-color: white;");
+        }
+        bindCurTimeLabel();
         mediaPlayer.totalDurationProperty().addListener(new ChangeListener<Duration>() {
             @Override
             public void changed(ObservableValue<? extends Duration> observable, Duration oldValue, Duration newValue) {
@@ -388,9 +461,24 @@ public class MediaBarController implements Initializable {
 
     @FXML
     private void navigateFavourite(MouseEvent event) throws IOException {
+        
+        // Stop music while navigating to other page
+        if(isPlaying){
+            cancelTimer();
+            mediaPlayer.pause();
+        }
+        
         Stage stage = (Stage)((Node) event.getSource()).getScene().getWindow();
         Parent root = FXMLLoader.load(getClass().getResource("../fxml/Fabourite.fxml"));
         Scene scene = new Scene(root);
+        scene.setOnMouseClicked(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent event) {
+                if(event.getClickCount()==2){
+                    stage.setFullScreen(true);
+                }
+            }
+        });
         stage.setScene(scene);
         stage.centerOnScreen();
         stage.show();
@@ -421,5 +509,180 @@ public class MediaBarController implements Initializable {
     @FXML
     private void changeSpeed(ActionEvent event) {
         mediaPlayer.setRate(Double.parseDouble((String)speedBox.getValue()));
+    }
+
+    @FXML
+    private void FavManage(ActionEvent event) {
+        Connection conn = new DatabaseConnection().getConnection();
+        if(checkDB()){
+            /*
+                This song was favourite. 
+                Remove this from favourite.
+            */
+            String query = "DELETE FROM favourite_list WHERE song_name = '"+selectedSongName.getText()+"';";
+            try{
+                Statement statement = conn.createStatement();
+                statement.executeUpdate(query);
+                favBtn.setStyle("-fx-background-color: white; ");
+            }catch(Exception e){
+                e.printStackTrace();
+            }
+        }else{
+            /* 
+                This song is not yet favourite.
+                Make this song favourite.
+            */
+            String query = "INSERT INTO favourite_list(song_name) VALUES('" +selectedSongName.getText()+"');";
+            try{
+                Statement statement = conn.createStatement();
+                statement.executeUpdate(query);
+                favBtn.setStyle("-fx-background-color: #039BE5;");
+            }catch(Exception e){
+                e.printStackTrace();
+            }
+        }
+}
+    
+    private boolean checkDB(){
+        Connection conn = new DatabaseConnection().getConnection();
+        String query = "SELECT count(1) FROM favourite_list WHERE song_name = '"+selectedSongName.getText()+"';";
+        try{
+            Statement statement = conn.createStatement();
+            ResultSet queryResult = statement.executeQuery(query);
+            if(queryResult.next()){
+                if(queryResult.getInt(1)==1) return true;
+            }
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+        return false;
+    }
+    
+    private void insertDB() {
+        // Insert currenly playing song in database
+        Connection conn = new DatabaseConnection().getConnection();
+        if(checkDB()==true){
+            String query = "DELETE FROM recentlyplayed WHERE song_name = '"+selectedSongName.getText()+"';";
+            try{
+                Statement statement = conn.createStatement();
+                statement.executeUpdate(query);
+            }catch(Exception e){
+                e.printStackTrace();
+            }
+        }
+        String query = "INSERT INTO recentlyplayed(song_name) VALUES('"+selectedSongName.getText()+"');";
+        try{
+            Statement statement = conn.createStatement();
+            statement.executeUpdate(query);
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+    }
+
+    private void fillPane() {
+        controller = new ContentController();
+        recentlyPlayedComponent.getChildren().clear();
+        recentlyPlayed = controller.getRecentlyPlayed();
+        for(int i=0;i<recentlyPlayed.size();i++){
+            FXMLLoader loader = new FXMLLoader();
+            loader.setLocation(getClass().getResource("../fxml/Song.fxml"));
+            VBox vbox;
+            try{
+                vbox = loader.load();
+                SongController songController = loader.getController();
+                songController.setData(recentlyPlayed.get(i));
+                recentlyPlayedComponent.getChildren().add(vbox);
+                vbox.setOnMouseClicked(new EventHandler<Event>() {
+                    @Override
+                    public void handle(Event event) {
+                        ObservableList<Node> list = vbox.getChildren();
+                        for(int i=0;i<list.size();i++){
+                            Node node = list.get(i);
+                            if(i==0 && node instanceof ImageView){
+                                Image image = ((ImageView)node).getImage();
+                                selectedImg.setImage(image);
+                            }else if(i==1 && node instanceof Label){
+                                String name = ((Label)node).getText();
+                                selectedSongName.setText(name);
+                            }else if(node instanceof Label){
+                                String artist = ((Label)node).getText();
+                                selectedArtist.setText(artist);
+                            }
+                        }
+                        
+                        /*
+                            Manage change of favourite button
+                        */
+                        if(checkDB()){
+                            favBtn.setStyle("-fx-background-color: #039BE5;");
+                        }else{
+                            favBtn.setStyle("-fx-background-color: white;");
+                        }
+                        
+                        // handle if music is already playing
+                        
+                        if(isPlaying){
+                            imgPlayPause.setImage(imgPlay);
+                            cancelTimer();
+                            mediaPlayer.pause();
+                            isPlaying = false;
+                        }
+                        
+                        file=directory.listFiles();
+                        for(File files: file){
+                            String name = selectedSongName.getText();
+                            if((path+"\\"+name+".mp3").equals(files.toString())){
+                                playlist.add(files);
+                                songCount=playlist.size()-1;
+                                media = new Media(files.toURI().toString());
+                                mediaPlayer = new MediaPlayer(media);
+                                
+                                bindCurTimeLabel();
+                                
+                                mediaPlayer.totalDurationProperty().addListener(new ChangeListener<Duration>() {
+                                    @Override
+                                    public void changed(ObservableValue<? extends Duration> observable, Duration oldValue, Duration newValue) {
+                                        musicSlider.setValue(0.0);
+                                        musicSlider.setMax(newValue.toSeconds());
+                                        endTimeLabel.setText(getTime(newValue));
+                                    }
+                                });
+                                
+                                mediaPlayer.currentTimeProperty().addListener(new ChangeListener<Duration>(){
+                                    @Override
+                                    public void changed(ObservableValue<? extends Duration> observable, Duration oldValue, Duration newValue) {
+                                        musicSlider.setValue(newValue.toSeconds());
+                                    }
+                                });
+                                
+                                musicSlider.setOnMousePressed(new EventHandler<MouseEvent>() {
+                                    @Override
+                                    public void handle(MouseEvent event) {
+                                        mediaPlayer.seek(Duration.seconds(musicSlider.getValue()));
+                                    }
+                                });
+                                
+                                musicSlider.setOnMouseDragged(new EventHandler<MouseEvent>() {
+                                    @Override
+                                    public void handle(MouseEvent event) {
+                                        mediaPlayer.seek(Duration.seconds(musicSlider.getValue()));
+                                    }
+                                });
+                                
+                                volumeSlider.valueProperty().addListener(new ChangeListener<Number>() {
+                    
+                                    @Override
+                                    public void changed(ObservableValue<? extends Number> arg0, Number arg1, Number arg2) {
+                                        mediaPlayer.setVolume(volumeSlider.getValue()*0.01);
+                                    }
+                                });
+                            }
+                        }
+                    }
+                });
+            }catch (IOException ex) {
+                Logger.getLogger(MediaBarController.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
     }
 }

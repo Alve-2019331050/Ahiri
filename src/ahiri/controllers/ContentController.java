@@ -1,8 +1,12 @@
 
 package ahiri.controllers;
 
+import ahiri.DatabaseConnection;
+import java.sql.Connection;
 import ahiri.Song;
 import java.io.IOException;
+import java.sql.ResultSet;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 import javafx.collections.ObservableList;
@@ -27,17 +31,28 @@ public class ContentController{
     public List<Song> getRecentlyPlayed(){
         List<Song> recentlyPlayedSongs = new ArrayList<>();
         
-        Song song = new Song(1,"TUMI RABE NIROBE","","",""," Arnob","../images/tumi robe nirobe(2).jpg");
-        recentlyPlayedSongs.add(song);
+        // To store song name taken from database in the reverse order
+        List<String> songList = new ArrayList<>();
         
-        song = new Song(1,"BHALOBESHEY SHOKHI JODI NIBHRITE JOTONE","","",""," Borno Chokroborty","../images/bhalobeshey shokhi jodi nibhrite jotone.jpg");
-        recentlyPlayedSongs.add(song);
-            
-        song = new Song(1,"AMI CHINIGO CHINI TOMARE","","",""," Borno Chokroborty","../images/ami chinigo chini tomare.jpg");
-        recentlyPlayedSongs.add(song);
+        Connection conn =new DatabaseConnection().getConnection();
+        String query = "SELECT * FROM recentlyplayed;";
+        try{
+            Statement statement = conn.createStatement();
+            ResultSet queryResult = statement.executeQuery(query);
+            while(queryResult.next()){
+                String songName = queryResult.getString("song_name");
+                songList.add(songName);
+            }
+        }catch(Exception e){
+            e.printStackTrace();
+        }
         
-        song = new Song(1,"AMI KAN PETE ROI","","",""," Borno Chokroborty","../images/ami kan petey roi.jpg");
-        recentlyPlayedSongs.add(song);
+        // Traverse song list in reverse order to get the recently played song in order
+        for(int i=songList.size()-1;i>=0;i--){
+            String artistName = MediaBarController.artist.getName(songList.get(i));
+            Song song = new Song(1,songList.get(i),artistName,"","../images/"+songList.get(i).toLowerCase()+".jpg");
+            recentlyPlayedSongs.add(song);
+        }
         
         return recentlyPlayedSongs;
     }

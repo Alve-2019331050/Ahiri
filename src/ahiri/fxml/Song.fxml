@@ -6,10 +6,10 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="175.0" prefWidth="143.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ahiri.controllers.SongController">
+<VBox alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="155.0" prefWidth="121.0" style="-fx-background-color: #402222;" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ahiri.controllers.SongController">
    <children>
-      <ImageView fx:id="img" fitHeight="145.0" fitWidth="143.0" pickOnBounds="true" preserveRatio="true" />
-      <Label fx:id="songName" prefHeight="23.0" prefWidth="143.0" style="-fx-background-color: transparent;" textFill="WHITE">
+      <ImageView fx:id="img" fitHeight="115.0" fitWidth="114.0" nodeOrientation="INHERIT" pickOnBounds="true" preserveRatio="true" />
+      <Label fx:id="songName" prefHeight="19.0" prefWidth="100.0" style="-fx-background-color: transparent;" textFill="WHITE">
          <font>
             <Font name="System Bold" size="10.0" />
          </font>
@@ -17,10 +17,16 @@
             <Insets />
          </opaqueInsets>
       </Label>
-      <Label fx:id="artist" prefHeight="31.0" prefWidth="143.0" style="-fx-background-color: transparent;" textFill="WHITE">
+      <Label fx:id="artist" prefHeight="18.0" prefWidth="104.0" style="-fx-background-color: transparent;" textFill="WHITE">
          <font>
-            <Font name="System Bold" size="10.0" />
+            <Font size="11.0" />
          </font>
       </Label>
    </children>
+   <opaqueInsets>
+      <Insets />
+   </opaqueInsets>
+   <padding>
+      <Insets top="5.0" />
+   </padding>
 </VBox>

@@ -267,7 +267,7 @@
                   <HBox prefHeight="17.0" prefWidth="93.0" />
                </children>
             </VBox>
-            <ComboBox fx:id="speedBox" onAction="#changeSpeed" prefHeight="16.0" prefWidth="100.0" promptText="1X" styleClass="hover" stylesheets="@../css/styling.css">
+            <ComboBox fx:id="speedBox" onAction="#changeSpeed" prefHeight="16.0" prefWidth="100.0" promptText="1" styleClass="hover" stylesheets="@../css/styling.css">
                <padding>
                   <Insets top="45.0" />
                </padding>
@@ -278,28 +278,27 @@
    <center>
       <AnchorPane prefHeight="200.0" prefWidth="200.0" styleClass="centre_color" stylesheets="@../css/styling.css" BorderPane.alignment="CENTER">
          <children>
-            <ImageView fitHeight="211.0" fitWidth="208.0" layoutX="30.0" layoutY="32.0" pickOnBounds="true" preserveRatio="true">
+            <ImageView fitHeight="198.0" fitWidth="184.0" layoutX="30.0" layoutY="32.0" pickOnBounds="true" preserveRatio="true">
                <image>
                   <Image url="@../images/love.jpg" />
                </image>
             </ImageView>
             <Label layoutX="256.0" layoutY="41.0" prefHeight="94.0" prefWidth="417.0" text="Favourite" textFill="WHITE">
                <font>
-                  <Font name="System Bold" size="64.0" />
+                  <Font name="System Bold" size="56.0" />
                </font>
             </Label>
-            <Label layoutX="262.0" layoutY="128.0" prefHeight="33.0" prefWidth="212.0" text="x songs" textFill="WHITE">
+            <Label fx:id="totalSongCount" layoutX="262.0" layoutY="128.0" prefHeight="33.0" prefWidth="212.0" textFill="WHITE">
                <font>
-                  <Font size="20.0" />
+                  <Font size="15.0" />
                </font>
             </Label>
             <TableView fx:id="tableViewFavourite" layoutX="14.0" layoutY="329.0" prefHeight="283.0" prefWidth="1025.0">
               <columns>
                 <TableColumn fx:id="colSerial" prefWidth="75.0" text="#" />
-                <TableColumn fx:id="colTitle" prefWidth="316.8000259399414" text="TITLE" />
-                  <TableColumn fx:id="colAlbum" prefWidth="185.59994506835938" text="ALBUM" />
-                  <TableColumn fx:id="colDate" prefWidth="239.199951171875" text="DATE ADDED" />
-                  <TableColumn fx:id="colDuration" prefWidth="207.1999755859374" text="DURATION" />
+                <TableColumn fx:id="colTitle" prefWidth="415.20008087158203" text="TITLE" />
+                  <TableColumn fx:id="colArtist" prefWidth="247.19992065429688" text="ARTIST" />
+                  <TableColumn fx:id="colDuration" prefWidth="198.40008544921875" text="DURATION" />
               </columns>
             </TableView>
          </children>
