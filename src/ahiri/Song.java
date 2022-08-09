@@ -5,6 +5,7 @@ import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
 
 
+
 public class Song {
     private SimpleStringProperty title,duration,artist,cover;
     private SimpleIntegerProperty serialNo;

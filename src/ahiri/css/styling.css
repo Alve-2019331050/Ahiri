@@ -99,7 +99,6 @@
 }
 
 .combo-box{
-    -fx-background-color : transparent;
     -fx-font-weight: bolder;
 }
 .combo-box .combo-box-popup .list-cell:hover{
@@ -116,4 +115,32 @@
 .combo-box .combo-box-popup .list-cell {
     -fx-background-color: transparent ;
     -fx-text-fill: white ;
+}
+.library_primary_color {
+    -fx-background-color : linear-gradient(#020f0f,#021211,#011413,#011716,#011a18,#012120,#01302e,#023835,#043835,#063633);
+}
+.library_secondary_color {
+    -fx-background-color : linear-gradient(#084d32,#053825,#02301f,#011a10,#01170f);
+}
+
+.libVolumeSlider {
+    -fx-pref-width : 400px;
+}
+
+.libVolumeSlider .track {
+    -fx-background-color : red;
+    -fx-background-radius : 10;
+}
+.playlist_primary_color{
+    -fx-background-color : linear-gradient(
+       #0a000a,#120111,#1c041a,#1c051b,#1c051b,#2b0829,#380d35,#3d103a,#42103f,#450e41,#4d0d48,#590754,
+        #5c0b56,#6b0b65,#820d7a,#911189,#9c5497,#a85ea3,#c779c2,#d98bd4,#d692d2,#d18ccc,#cc99c9
+    );
+}
+.playtoSonglist_primary_color{
+    -fx-background-color : linear-gradient(
+        #f576c6,#e866b8,#db5aac,#d64da4,#c43b92,#c43590,#b32980,#99236e,#80215d,#702253,#591d43,#471435,
+        #40132f,#300d23,#360c26,#330a24,#29061c,#26041a,#2b031d,#1f0114,#1c0012,#24111d,#261420,#291722,
+        #1c1218
+    );
 }
