@@ -36,7 +36,7 @@
                <children>
                   <HBox prefHeight="50.0" prefWidth="100.0">
                      <children>
-                        <Button fx:id="HomeBtn" mnemonicParsing="false" onMouseClicked="#navigateHome" style="-fx-background-color: transparent;">
+                        <Button fx:id="HomeBtn" mnemonicParsing="false" onMouseClicked="#navigateHome" style="-fx-background-color: transparent;" stylesheets="@../css/styling.css">
                            <graphic>
                               <ImageView fitHeight="97.0" fitWidth="34.0" pickOnBounds="true" preserveRatio="true">
                                  <image>
@@ -54,7 +54,7 @@
                   </HBox>
                   <HBox prefHeight="50.0" prefWidth="100.0">
                      <children>
-                        <Button fx:id="SearchBtn" mnemonicParsing="false" style="-fx-background-color: transparent;">
+                        <Button fx:id="SearchBtn" mnemonicParsing="false" style="-fx-background-color: transparent;" stylesheets="@../css/styling.css">
                            <graphic>
                               <ImageView fitHeight="83.0" fitWidth="31.0" pickOnBounds="true" preserveRatio="true">
                                  <image>
@@ -72,7 +72,7 @@
                   </HBox>
                   <HBox prefHeight="50.0" prefWidth="100.0">
                      <children>
-                        <Button fx:id="LibraryBtn" mnemonicParsing="false" style="-fx-background-color: transparent;">
+                        <Button fx:id="LibraryBtn" mnemonicParsing="false" style="-fx-background-color: transparent;" stylesheets="@../css/styling.css">
                            <graphic>
                               <ImageView fitHeight="40.0" fitWidth="41.0" pickOnBounds="true" preserveRatio="true">
                                  <image>
@@ -235,7 +235,7 @@
                   </Label>
                </children>
             </VBox>
-            <TableView fx:id="songTable" prefHeight="681.0" prefWidth="689.0" />
+            <TableView fx:id="songTable" prefHeight="681.0" prefWidth="689.0" stylesheets="@../css/LibraryStyling.css" />
          </children>
       </VBox>
    </center>

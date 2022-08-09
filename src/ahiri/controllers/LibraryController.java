@@ -1,5 +1,6 @@
 package ahiri.controllers;
 
+import ahiri.LibrarySong;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
@@ -9,6 +10,8 @@ import java.util.Timer;
 import java.util.TimerTask;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
+import javafx.collections.FXCollections;
+import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -23,7 +26,9 @@ import javafx.scene.control.Label;
 import javafx.scene.control.ProgressBar;
 import javafx.scene.control.Slider;
 import javafx.scene.control.TableColumn;
+import javafx.scene.control.TablePosition;
 import javafx.scene.control.TableView;
+import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
@@ -61,7 +66,7 @@ public class LibraryController implements Initializable {
     
     private ArrayList<File> songs;
     private int songNumber;
-    private String speeds[] = {"0.25","0.50","0.75","1","1.25","1.50","1.75","2"};
+    private String speeds[] = {"0.25","0.50","0.75","1.00","1.25","1.50","1.75","2.00"};
     //ObservableList<String> list = FXCollection.observableArrayList("0.25","0.50","0.75","1","1.25","1.50","1.75","2");
     
     private Timer timer;
@@ -76,17 +81,32 @@ public class LibraryController implements Initializable {
     
     private Media media;
     private MediaPlayer mediaPlayer;
+    /*
+    public ObservableList<LibrarySong> data = FXCollections.observableArrayList(
+            new LibrarySong("AMI CHINIGO CHINI","4:33"),
+            new LibrarySong("AMI KAN PETE ROI","3:33"),
+            new LibrarySong("BHALOBESHE SHOKHI","5:33")
+        );
+    */
+    public ObservableList<LibrarySong> data;
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         try{
+            songTable.getSelectionModel().setCellSelectionEnabled(true);
+            ObservableList selectedCells = songTable.getSelectionModel().getSelectedCells();
+            selectedCells.addListener(new ListChangeListener() {
+                @Override
+                public void onChanged(ListChangeListener.Change change) {
+                    TablePosition tp = (TablePosition)selectedCells.get(0);
+                    Object ob = tp.getTableColumn().getCellData(tp.getRow());
+                    System.out.println(ob);
+                }
+            });
             for(int i = 0; i < speeds.length; i++) {
                 speedBox.getItems().add(speeds[i]);
             }
-            //speedBox.getItems().addAll("0.25","0.50","0.75","1","1.25","1.50","1.75","2");
-            //speedBox.setOnAction(this::changeSpeed);
             songs = new ArrayList<File>();
-
             directory = new File("src/ahiri/music");
             /*
             listFiles() gets all the different files from our directory.
@@ -119,13 +139,57 @@ public class LibraryController implements Initializable {
             TableColumn c2 = new TableColumn("Duration");
             songTable.getColumns().addAll(c1,c2);
             songTable.setColumnResizePolicy(songTable.CONSTRAINED_RESIZE_POLICY);
+            
+            data = FXCollections.observableArrayList();
+            
+            c1.setCellValueFactory(new PropertyValueFactory<LibrarySong,String>("Track"));
+            c2.setCellValueFactory(new PropertyValueFactory<LibrarySong,String>("Duration"));
+            loadTable(songs);
+            
+            
+            
+            //songTable.setItems(data);            
         }catch(NullPointerException e){
             e.printStackTrace();
         }
         
     }
     
-    public void playMedia() {
+    private void loadTable(ArrayList<File> value){
+        for(int i = 0; i < value.size(); i++) {
+            String songName = value.get(i).getName();
+            String songDuration;
+            
+            //songDuration = Double.toString(value.get(i).getDuration().toSeconds());
+            //songDuration = mp.getTotalDuration().toSeconds());
+            data.add(new LibrarySong(songName,"0:00"));
+        }
+        songTable.setItems(data);
+        
+        /*songTable.setOnMouseClicked(e ->{
+            tableEvents();
+        });
+        */
+    }
+    
+    public void tableEvents(){
+        /*for(var data : songTable.getSelectionModel().getSelectedItems()){
+            String songClicked;
+            songClicked = data.getId();
+            for(int i = 0; i < songs.size(); i++){
+                String id = songs.get(i).getName();
+                if(songClicked == id){
+                    media = new Media(songClicked);
+                    mediaPlayer = new MediaPlayer(media);
+                    libSongLabel.setText(songClicked);
+                    playMedia();
+                }
+            }
+        }*/
+        
+    }
+    
+    public void playMedia(){
         if(running == 0){
             beginTimer();
             mediaPlayer.play();

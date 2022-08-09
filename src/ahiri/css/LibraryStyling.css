@@ -1,0 +1,25 @@
+/*
+Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+Click nbfs://nbhost/SystemFileSystem/Templates/Other/CascadeStyleSheet.css to edit this template
+*/
+/* 
+    Created on : Aug 9, 2022, 3:11:06 AM
+    Author     : Raha
+*/
+.table-view{
+    -fx-background-color:transparent;
+}
+.table-row-cell:empty{
+    -fx-background-color: transparent;
+}
+.table-row-cell:empty .table-cell{
+    -fx-border-width: 0px;
+}
+.table-row-cell:odd:filled{
+    -fx-background-color: #131515;
+    -fx-background-insets: 0,0 0 1 0;
+}
+.table-row-cell:even:filled{
+    -fx-background-color: #021C1E;
+    -fx-background-insets: 0,0 0 1 0;
+}
