@@ -147,9 +147,9 @@
          <children>
             <HBox prefHeight="66.0" prefWidth="400.0" style="-fx-background-color: transparent;">
                <children>
-                  <Label fx:id="libSongLabel" prefHeight="66.0" prefWidth="243.0" style="-fx-background-color: transparent;" textFill="#fff9f9">
+                  <Label fx:id="libSongLabel" prefHeight="66.0" prefWidth="281.0" style="-fx-background-color: transparent;" textFill="#fff9f9">
                      <font>
-                        <Font name="Bradley Hand ITC" size="13.0" />
+                        <Font name="Bell MT" size="18.0" />
                      </font></Label>
                   <Button fx:id="libVolumeBtn" mnemonicParsing="false" prefHeight="66.0" prefWidth="54.0" style="-fx-background-color: transparent;">
                      <graphic>
@@ -162,7 +162,7 @@
                   </Button>
                   <HBox alignment="TOP_CENTER" prefHeight="100.0" prefWidth="200.0">
                      <children>
-                        <Slider fx:id="libVolumeSlider" prefHeight="100.0" prefWidth="400.0" styleClass="libVolumeSlider" stylesheets="@../css/styling.css" />
+                        <Slider fx:id="libVolumeSlider" prefHeight="66.0" prefWidth="137.0" styleClass="libVolumeSlider" stylesheets="@../css/styling.css" />
                      </children>
                   </HBox>
                </children>
@@ -220,6 +220,22 @@
                   <ComboBox fx:id="speedBox" onAction="#changeSpeed" prefWidth="100.0" promptText="SPEED" />
                </children>
             </HBox>
+            <HBox prefHeight="100.0" prefWidth="200.0">
+               <children>
+                  <Button fx:id="addPlaylistBtn" alignment="CENTER" mnemonicParsing="false" style="-fx-background-color: transparent;" styleClass="hover" stylesheets="@../css/styling.css">
+                     <HBox.margin>
+                        <Insets left="180.0" top="30.0" />
+                     </HBox.margin>
+                     <graphic>
+                        <ImageView fitHeight="58.0" fitWidth="56.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@../images/addPlaylist.png" />
+                           </image>
+                        </ImageView>
+                     </graphic>
+                  </Button>
+               </children>
+            </HBox>
          </children>
       </VBox>
    </right>
@@ -228,11 +244,23 @@
          <children>
             <VBox prefHeight="206.0" prefWidth="689.0">
                <children>
-                  <Label fx:id="topLabel" prefHeight="264.0" prefWidth="751.0" text="MY SONGS" textFill="#519e43">
+                  <Label fx:id="topLabel" prefHeight="118.0" prefWidth="689.0" text="MY SONGS" textFill="#519e43">
                      <font>
-                        <Font name="Bradley Hand ITC" size="72.0" />
+                        <Font name="Bradley Hand ITC" size="85.0" />
                      </font>
+                     <graphic>
+                        <HBox prefHeight="100.0" prefWidth="26.0" />
+                     </graphic>
                   </Label>
+                  <Label fx:id="totSongNumberLabel" alignment="CENTER" prefHeight="22.0" prefWidth="794.0" style="-fx-background-color: transparent;" text="snlaha" textAlignment="CENTER" textFill="#63cc49">
+                     <font>
+                        <Font name="Bell MT" size="18.0" />
+                     </font>
+                     <graphic>
+                        <HBox prefHeight="100.0" prefWidth="206.0" />
+                     </graphic>
+                  </Label>
+                  <HBox alignment="CENTER" prefHeight="57.0" prefWidth="689.0" />
                </children>
             </VBox>
             <TableView fx:id="songTable" prefHeight="681.0" prefWidth="689.0" stylesheets="@../css/LibraryStyling.css" />
