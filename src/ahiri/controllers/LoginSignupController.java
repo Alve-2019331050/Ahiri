@@ -1,4 +1,3 @@
-
 package ahiri.controllers;
 
 import ahiri.DatabaseConnection;
@@ -30,7 +29,7 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 
 /**
- * FXML Controller class
+ * This class implements functionality of loginsignup fxml
  *
  * @author Alve
  */
@@ -102,6 +101,9 @@ public class LoginSignupController implements Initializable {
         btnSignIn.setVisible(true);
     }    
 
+    /**
+     * Validate user login
+     */
     @FXML
     private void handleSignIn(MouseEvent event) {
         if(nameField.getText().isBlank()==false && passwordField.getText().isBlank()==false){
@@ -111,6 +113,9 @@ public class LoginSignupController implements Initializable {
         }
     }
 
+    /**
+     * Check validity of email and register the user 
+     */
     @FXML
     private void handleSignUpDup(MouseEvent event) {
         if(nameField.getText().isBlank()==true || passwordField.getText().isBlank()==true){
@@ -127,6 +132,7 @@ public class LoginSignupController implements Initializable {
         }
     }
 
+    // Utility function for transitioning the pane
     @FXML
     private void handleSignUp(MouseEvent event) {
         TranslateTransition slider = new TranslateTransition();
@@ -150,6 +156,7 @@ public class LoginSignupController implements Initializable {
         btnSignIn.setVisible(false);
     }
 
+    // Utility function for transitioning the pane
     @FXML
     private void handleSignInDup(MouseEvent event) {
         TranslateTransition slider = new TranslateTransition();
@@ -173,6 +180,7 @@ public class LoginSignupController implements Initializable {
         btnSignIn.setVisible(true);
     }
 
+    // Utility function for validating login
     private void validateLogin(MouseEvent event) {
         Connection conn = new DatabaseConnection().getConnection();
         String query = "SELECT count(1) FROM user_account WHERE BINARY username = '" + nameField.getText()
@@ -205,7 +213,8 @@ public class LoginSignupController implements Initializable {
             e.printStackTrace();
         }
     }
-
+    
+    // Utility function for registering user
     private void register_user() {
         Connection conn = new DatabaseConnection().getConnection();
         String query = "INSERT INTO user_account(username,password,email) VALUES('" +
@@ -225,6 +234,7 @@ public class LoginSignupController implements Initializable {
         }
     }
     
+    // Utility function for showing error message while signup and login
     private void showMessage(Label label,String message){
         label.setVisible(true);
         label.setText(message);

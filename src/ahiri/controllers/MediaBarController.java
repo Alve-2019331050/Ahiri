@@ -1,4 +1,3 @@
-
 package ahiri.controllers;
 
 import ahiri.Artist;
@@ -46,7 +45,11 @@ import javafx.scene.media.MediaPlayer;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 
-
+/**
+ * This class implements functionality of home fxml
+ *
+ * @author Alve
+ */
 public class MediaBarController implements Initializable {
 
     @FXML
@@ -170,9 +173,7 @@ public class MediaBarController implements Initializable {
                             }
                         }
                         
-                        /*
-                            Manage change of favourite button
-                        */
+                        // Manage change of favourite button
                         if(checkDB()){
                             favBtn.setStyle("-fx-background-color: #039BE5;");
                         }else{
@@ -437,7 +438,8 @@ public class MediaBarController implements Initializable {
         initiateTimer();
         mediaPlayer.seek(Duration.seconds(0));
     }
-
+    
+    // Initialize the timer
     private void initiateTimer() {
         timer = new Timer();
 	task = new TimerTask() {
@@ -454,6 +456,7 @@ public class MediaBarController implements Initializable {
 	timer.scheduleAtFixedRate(task, 0, 500);
     }
     
+    // Stop the timer
     private void cancelTimer(){
         running = false;
 	timer.cancel();
@@ -507,6 +510,10 @@ public class MediaBarController implements Initializable {
         stage.centerOnScreen();
         stage.show();
     }
+    
+    /**
+     * Creates binding between media player's current time and current time showing label
+     */
     private void bindCurTimeLabel() {
         curTimeLabel.textProperty().bind(Bindings.createStringBinding(new Callable<String>(){
             @Override
@@ -517,6 +524,11 @@ public class MediaBarController implements Initializable {
         }, mediaPlayer.currentTimeProperty()));
     }
     
+    /**
+     * 
+     * @param time - time in Duration format
+     * @return time in hour:minute:second format
+     */
     public String getTime(Duration time){
         int hours = (int)time.toHours();
         int minutes = ((int)time.toMinutes())%60;
@@ -564,8 +576,12 @@ public class MediaBarController implements Initializable {
                 e.printStackTrace();
             }
         }
-}
+    }
     
+    /**
+     * 
+     * @return true if currently playing song is already in favourite database , false otherwise
+     */
     private boolean checkDB(){
         Connection conn = new DatabaseConnection().getConnection();
         String query = "SELECT count(1) FROM favourite_list WHERE song_name = '"+selectedSongName.getText()+"';";
@@ -581,10 +597,29 @@ public class MediaBarController implements Initializable {
         return false;
     }
     
-    private void insertDB() {
-        // Insert currenly playing song in database
+    /**
+     * 
+     * @return true if currently playing song is already in recentlyplayed database , false otherwise
+     */
+    private boolean checkDBRP(){
         Connection conn = new DatabaseConnection().getConnection();
-        if(checkDB()==true){
+        String query = "SELECT count(1) FROM recentlyplayed WHERE song_name = '"+selectedSongName.getText()+"';";
+        try{
+            Statement statement = conn.createStatement();
+            ResultSet queryResult = statement.executeQuery(query);
+            if(queryResult.next()){
+                if(queryResult.getInt(1)==1) return true;
+            }
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+        return false;
+    }
+    
+    // Insert currenly playing song in database
+    private void insertDB() {
+        Connection conn = new DatabaseConnection().getConnection();
+        if(checkDBRP()==true){
             String query = "DELETE FROM recentlyplayed WHERE song_name = '"+selectedSongName.getText()+"';";
             try{
                 Statement statement = conn.createStatement();
@@ -602,6 +637,7 @@ public class MediaBarController implements Initializable {
         }
     }
 
+    // Utility function for filling recently played scrollpane
     private void fillPane() {
         controller = new ContentController();
         recentlyPlayedComponent.getChildren().clear();

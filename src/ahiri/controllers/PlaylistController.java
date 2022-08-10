@@ -11,7 +11,6 @@ import java.util.ResourceBundle;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
-import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -33,7 +32,7 @@ import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
 
 /**
- * FXML Controller class
+ * This class implements functionality of playlist fxml
  *
  * @author Alve
  */
@@ -94,6 +93,7 @@ public class PlaylistController implements Initializable {
         }catch(Exception e){
             e.printStackTrace();
         }
+        // Sets the value of the property cellValueFactory
         colName.setCellValueFactory(new PropertyValueFactory<Playlist,String>("name"));
         colCount.setCellValueFactory(new PropertyValueFactory<Playlist,Integer>("songCount"));
         playlistTable.setItems(playlist);

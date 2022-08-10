@@ -1,4 +1,3 @@
-
 package ahiri.controllers;
 
 import ahiri.DatabaseConnection;
@@ -45,7 +44,7 @@ import javafx.stage.Stage;
 import javafx.util.Duration;
 
 /**
- * FXML Controller class
+ * This class implements functionality of favourite fxml
  *
  * @author Alve
  */
@@ -137,9 +136,7 @@ public class FavouriteController implements Initializable {
         directory = new File(path);
         file=directory.listFiles();
         
-        /*
-            Initializing favourite song table with data from database
-        */
+        //Initializing favourite song table with data from database
         index = 0;
         
         Connection conn = new DatabaseConnection().getConnection();
@@ -175,6 +172,7 @@ public class FavouriteController implements Initializable {
             e.printStackTrace();
         }
         
+        // Sets the value of the property cellValueFactory
         colSerial.setCellValueFactory(new PropertyValueFactory<Song,Integer>("serialNo"));
         colTitle.setCellValueFactory(new PropertyValueFactory<Song,String>("title"));
         colArtist.setCellValueFactory(new PropertyValueFactory<Song,String>("artist"));
@@ -185,9 +183,7 @@ public class FavouriteController implements Initializable {
         // Initializing songcount label
         totalSongCount.setText(Integer.toString(index)+" songs");
         
-        /*
-            Adding listener for mouse click in table cell
-        */
+        //Adding listener for mouse click in table cell
         tableViewFavourite.getSelectionModel().setCellSelectionEnabled(true);
         ObservableList selectedCells = tableViewFavourite.getSelectionModel().getSelectedCells();
 
@@ -212,6 +208,7 @@ public class FavouriteController implements Initializable {
                     running = false;
                 }
                 
+                // Traversing the music folder to get the selected song
                 for(File files: file){
                     String name = selectedSongName.getText();
                     if((path+"\\"+name+".mp3").equals(files.toString())){
@@ -318,10 +315,8 @@ public class FavouriteController implements Initializable {
             media = new Media(playlist.get(songCount).toURI().toString());
             mediaPlayer = new MediaPlayer(media);
 	}
-        /*
-            Manage change of thumbnail
-        */
         
+        // Manage change of thumbnail
         String previous = playlist.get(songCount).toString();
         String name = previous.substring(path.length()+1, previous.length()-4);
         selectedSongName.setText(name);
@@ -415,10 +410,8 @@ public class FavouriteController implements Initializable {
             mediaPlayer = new MediaPlayer(media);
 	}
         
-        /*
-            Manage change of thumbnail
-        */
         
+        // Manage change of thumbnail       
         String previous = playlist.get(songCount).toString();
         String name = previous.substring(path.length()+1, previous.length()-4);
         selectedSongName.setText(name);
@@ -473,6 +466,7 @@ public class FavouriteController implements Initializable {
         mediaPlayer.setRate(Double.parseDouble((String)speedBox.getValue()));
     }
     
+    // Initialize the timer
     private void initiateTimer() {
         timer = new Timer();
 	task = new TimerTask() {
@@ -489,11 +483,15 @@ public class FavouriteController implements Initializable {
 	timer.scheduleAtFixedRate(task, 0, 500);
     }
     
+    // Stop the timer
     private void cancelTimer(){
         running = false;
 	timer.cancel();
     }
     
+    /**
+     * Creates binding between media player's current time and current time showing label
+     */
     private void bindCurTimeLabel() {
         curTimeLabel.textProperty().bind(Bindings.createStringBinding(new Callable<String>(){
             @Override
@@ -504,6 +502,11 @@ public class FavouriteController implements Initializable {
         }, mediaPlayer.currentTimeProperty()));
     }
     
+    /**
+     * 
+     * @param time - time in Duration format
+     * @return time in hour:minute:second format
+     */
     public String getTime(Duration time){
         int hours = (int)time.toHours();
         int minutes = ((int)time.toMinutes())%60;
@@ -516,9 +519,13 @@ public class FavouriteController implements Initializable {
         }
     }
     
+    /**
+     * 
+     * @return true if currently playing song is already in recentlyplayed database , false otherwise
+     */
     private boolean checkDB(){
         Connection conn = new DatabaseConnection().getConnection();
-        String query = "SELECT count(1) FROM favourite_list WHERE song_name = '"+selectedSongName.getText()+"';";
+        String query = "SELECT count(1) FROM recentlyplayed WHERE song_name = '"+selectedSongName.getText()+"';";
         try{
             Statement statement = conn.createStatement();
             ResultSet queryResult = statement.executeQuery(query);
@@ -531,8 +538,10 @@ public class FavouriteController implements Initializable {
         return false;
     }
 
+    /**
+     * Insert currently playing song in database
+     */
     private void insertDB() {
-        // Insert currenly playing song in database
         Connection conn = new DatabaseConnection().getConnection();
         if(checkDB()==true){
             String query = "DELETE FROM recentlyplayed WHERE song_name = '"+selectedSongName.getText()+"';";

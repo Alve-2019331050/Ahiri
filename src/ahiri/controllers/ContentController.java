@@ -1,4 +1,3 @@
-
 package ahiri.controllers;
 
 import ahiri.DatabaseConnection;
@@ -23,6 +22,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 
 /**
+ * This class arranges recently played content in the desired order
  * @author Alve
  */
 public class ContentController{
@@ -30,12 +30,17 @@ public class ContentController{
     List<Song> recentlyPlayed;
     List<Song> favourites;
             
+    /**
+     * Get recently played song in the correct order
+     * @return a list containing song
+     */
     public List<Song> getRecentlyPlayed(){
         List<Song> recentlyPlayedSongs = new ArrayList<>();
         
         // To store song name taken from database in the reverse order
         List<String> songList = new ArrayList<>();
         
+        // fetch song name from database
         Connection conn =new DatabaseConnection().getConnection();
         String query = "SELECT * FROM recentlyplayed;";
         try{
@@ -49,7 +54,7 @@ public class ContentController{
             e.printStackTrace();
         }
         
-        // Traverse song list in reverse order to get the recently played song in order
+        // Traverse song list in reverse order to get the recently played song in correct order
         for(int i=songList.size()-1;i>=0;i--){
             String artistName = MediaBarController.artist.getName(songList.get(i));
             Song song = new Song(1,songList.get(i),artistName,"","../images/"+songList.get(i).toLowerCase()+".jpg");

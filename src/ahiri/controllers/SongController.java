@@ -10,7 +10,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 
 /**
- * FXML Controller class
+ * This class implements functionality of song fxml
  *
  * @author Alve
  */
@@ -27,8 +27,12 @@ public class SongController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         
-    }    
+    }   
     
+    /**
+     * Setting the background image, name and artist of the song
+     * @param song - an object of song class
+     */
     public void setData(Song song){
         Image image = new Image(getClass().getResourceAsStream(song.getCover()));
         img.setImage(image);

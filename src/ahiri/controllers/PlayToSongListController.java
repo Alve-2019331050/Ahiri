@@ -1,7 +1,6 @@
 package ahiri.controllers;
 
 import ahiri.DatabaseConnection;
-import ahiri.Playlist;
 import ahiri.PlaylistSongs;
 import java.io.File;
 import java.io.IOException;
@@ -43,7 +42,7 @@ import javafx.stage.Stage;
 import javafx.util.Duration;
 
 /**
- * FXML Controller class
+ * This class implements functionality of PlayToSongList fxml
  *
  * @author Alve
  */
@@ -123,7 +122,9 @@ public class PlayToSongListController implements Initializable {
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
+        // Setting name of the playlist
         playlistName.setText(PlaylistController.selectedPlaylistName);
+        //fetching songs of this playlist from database
         Connection conn = new DatabaseConnection().getConnection();
         String query = "SELECT * FROM playlist_songs WHERE BINARY playlist_name = '"+PlaylistController.selectedPlaylistName+"';";
         try{
@@ -137,6 +138,7 @@ public class PlayToSongListController implements Initializable {
         }catch(Exception e){
             e.printStackTrace();
         }
+        // Sets the value of the property cellValueFactory
         colTitle.setCellValueFactory(new PropertyValueFactory<PlaylistSongs,String>("name"));
         colArtist.setCellValueFactory(new PropertyValueFactory<PlaylistSongs,String>("artist"));
         playlistSongTable.setItems(playlistSongs);
@@ -409,6 +411,7 @@ public class PlayToSongListController implements Initializable {
         mediaPlayer.setRate(Double.parseDouble((String)speedBox.getValue()));
     }
     
+    // Initialize the timer
     private void initiateTimer() {
         timer = new Timer();
 	task = new TimerTask() {
@@ -425,11 +428,15 @@ public class PlayToSongListController implements Initializable {
 	timer.scheduleAtFixedRate(task, 0, 500);
     }
     
+    // Stop the timer
     private void cancelTimer(){
         running = false;
 	timer.cancel();
     }
     
+    /**
+     * Creates binding between media player's current time and current time showing label
+     */
     private void bindCurTimeLabel() {
         curTimeLabel.textProperty().bind(Bindings.createStringBinding(new Callable<String>(){
             @Override
@@ -440,6 +447,11 @@ public class PlayToSongListController implements Initializable {
         }, mediaPlayer.currentTimeProperty()));
     }
     
+    /**
+     * 
+     * @param time - time in Duration format
+     * @return time in hour:minute:second format
+     */
     public String getTime(Duration time){
         int hours = (int)time.toHours();
         int minutes = ((int)time.toMinutes())%60;
@@ -452,9 +464,13 @@ public class PlayToSongListController implements Initializable {
         }
     }
     
+    /**
+     * 
+     * @return true if currently playing song is already in recentlyplayed database , false otherwise
+     */
     private boolean checkDB(){
         Connection conn = new DatabaseConnection().getConnection();
-        String query = "SELECT count(1) FROM favourite_list WHERE song_name = '"+selectedSongName.getText()+"';";
+        String query = "SELECT count(1) FROM recentlyplayed WHERE song_name = '"+selectedSongName.getText()+"';";
         try{
             Statement statement = conn.createStatement();
             ResultSet queryResult = statement.executeQuery(query);
@@ -467,8 +483,8 @@ public class PlayToSongListController implements Initializable {
         return false;
     }
     
+    // Insert currenly playing song in database
     private void insertDB() {
-        // Insert currenly playing song in database
         Connection conn = new DatabaseConnection().getConnection();
         if(checkDB()==true){
             String query = "DELETE FROM recentlyplayed WHERE song_name = '"+selectedSongName.getText()+"';";
