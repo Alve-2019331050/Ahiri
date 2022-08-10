@@ -5,6 +5,7 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Objects;
 import java.util.ResourceBundle;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -38,15 +39,15 @@ import javafx.scene.media.MediaPlayer;
 import javafx.stage.Stage;
 
 /**
- * FXML Controller class
- *
+ * This class controls functionalities of Library.
  * @author Raha
  */
+
 public class LibraryController implements Initializable {
     
     @FXML
     private Button libPreviousMusicBtn,libPlayPauseBtn,libNextMusicBtn,
-            libVolumeBtn,HomeBtn,SearchBtn,LibraryBtn,FavouriteBtn;
+            libVolumeBtn,HomeBtn,SearchBtn,LibraryBtn,FavouriteBtn,libStopBtn,addPlaylistBtn;
     @FXML
     private ComboBox<String> speedBox;
     @FXML
@@ -54,7 +55,7 @@ public class LibraryController implements Initializable {
     @FXML
     private ProgressBar songProgressBar;
     @FXML
-    private Label libSongLabel,topLabel;
+    private Label libSongLabel,topLabel,totSongNumberLabel;
     @FXML
     private ImageView libPlayPauseImgView;
     @FXML
@@ -68,7 +69,6 @@ public class LibraryController implements Initializable {
     private ArrayList<File> songs;
     private int songNumber;
     private String speeds[] = {"0.25","0.50","0.75","1.00","1.25","1.50","1.75","2.00"};
-    //ObservableList<String> list = FXCollection.observableArrayList("0.25","0.50","0.75","1","1.25","1.50","1.75","2");
     
     private Timer timer;
     private TimerTask task;
@@ -82,30 +82,19 @@ public class LibraryController implements Initializable {
     
     private Media media;
     private MediaPlayer mediaPlayer;
-    /*
-    public ObservableList<LibrarySong> data = FXCollections.observableArrayList(
-            new LibrarySong("AMI CHINIGO CHINI","4:33"),
-            new LibrarySong("AMI KAN PETE ROI","3:33"),
-            new LibrarySong("BHALOBESHE SHOKHI","5:33")
-        );
-    */
+
     public ObservableList<LibrarySong> data;
-    @FXML
-    private Button libStopBtn;
+    
+    /**
+     * This function initializes the library when the app is run first. 
+     * <p>
+     * @param url
+     * @param rb 
+     */
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         try{
-            songTable.getSelectionModel().setCellSelectionEnabled(true);
-            ObservableList selectedCells = songTable.getSelectionModel().getSelectedCells();
-            selectedCells.addListener(new ListChangeListener() {
-                @Override
-                public void onChanged(ListChangeListener.Change change) {
-                    TablePosition tp = (TablePosition)selectedCells.get(0);
-                    Object ob = tp.getTableColumn().getCellData(tp.getRow());
-                    System.out.println(ob);
-                }
-            });
             for(int i = 0; i < speeds.length; i++) {
                 speedBox.getItems().add(speeds[i]);
             }
@@ -124,6 +113,7 @@ public class LibraryController implements Initializable {
             media = new Media(songs.get(songNumber).toURI().toString());
             mediaPlayer = new MediaPlayer(media);
             libSongLabel.setText(songs.get(songNumber).getName());
+            totSongNumberLabel.setText(String.valueOf(songs.size())+" songs");
 
             imgPause = new Image(new File("src/ahiri/images/libPauseBtn.png").toURI().toString());
             imgPlay = new Image(new File("src/ahiri/images/library_play.png").toURI().toString());
@@ -148,50 +138,52 @@ public class LibraryController implements Initializable {
             c1.setCellValueFactory(new PropertyValueFactory<LibrarySong,String>("Track"));
             c2.setCellValueFactory(new PropertyValueFactory<LibrarySong,String>("Duration"));
             loadTable(songs);
-            
-            
-            
-            //songTable.setItems(data);            
+            songTable.getSelectionModel().setCellSelectionEnabled(true);
+            ObservableList selectedCells = songTable.getSelectionModel().getSelectedCells();
+            selectedCells.addListener(new ListChangeListener() {
+                @Override
+                public void onChanged(ListChangeListener.Change change) {
+                    TablePosition tp = (TablePosition)selectedCells.get(0);
+                    Object ob = tp.getTableColumn().getCellData(tp.getRow());;
+                    for(int i = 0; i < songs.size(); i++){
+                        if(Objects.equals(ob,songs.get(i).getName())){
+                            media = new Media(songs.get(i).toURI().toString());
+                            mediaPlayer = new MediaPlayer(media);
+                            libSongLabel.setText(songs.get(i).getName());
+                            playMedia();
+                            break;
+                        }
+                        songNumber = (++songNumber)%(int)(songs.size());
+                    }
+                }
+            });
         }catch(NullPointerException e){
             e.printStackTrace();
         }
-        
     }
+    
+    /**
+     * Accepts an arrayList containing .mp3 files and adds file names and duration to the table view.
+     * <p>
+     * @param value 
+     */
     
     private void loadTable(ArrayList<File> value){
         for(int i = 0; i < value.size(); i++) {
             String songName = value.get(i).getName();
             String songDuration;
-            
-            //songDuration = Double.toString(value.get(i).getDuration().toSeconds());
-            //songDuration = mp.getTotalDuration().toSeconds());
             data.add(new LibrarySong(songName,"0:00"));
         }
         songTable.setItems(data);
-        
-        /*songTable.setOnMouseClicked(e ->{
-            tableEvents();
-        });
-        */
     }
-    
-    public void tableEvents(){
-        /*for(var data : songTable.getSelectionModel().getSelectedItems()){
-            String songClicked;
-            songClicked = data.getId();
-            for(int i = 0; i < songs.size(); i++){
-                String id = songs.get(i).getName();
-                if(songClicked == id){
-                    media = new Media(songClicked);
-                    mediaPlayer = new MediaPlayer(media);
-                    libSongLabel.setText(songClicked);
-                    playMedia();
-                }
-            }
-        }*/
-        
-    }
-    
+
+    /**
+     * Plays the media and adds image of Pause media to the ImageView when the button named libPlayPauseBtn
+     * is clicked and the value of variable <i>running<i> is set to zero. 
+     * <p>
+     * Pauses the media and adds image of Play media to the ImageView when the button named libPlayPauseBtn
+     * is clicked and the value of variable <i>running<i> is set to one.
+     */
     @FXML
     public void playMedia(){
         if(running == 0){
@@ -206,10 +198,15 @@ public class LibraryController implements Initializable {
             running = 0;
         }
     }
+    /**
+     * Stops the media when the button named libStopBtn is clicked and changes the 
+     * image of libPlayPauseImgView ImageViewer to Play image.
+     * <p>
+     * It also sets the Progress Bar.
+     */
     @FXML
     public void stopMedia() {
         if(running == 1){
-            //cancelTimer();
             libPlayPauseImgView.setImage(imgPlay);
             running = 0;
         }
@@ -217,13 +214,17 @@ public class LibraryController implements Initializable {
         songProgressBar.setProgress(0);
         mediaPlayer.stop();
     }
+    /**
+     * It gives access of the media to the previous music file of the current file. 
+     * <p>
+     * It also set image Play icon to the libPlayPauseImgView.
+     */
     @FXML
     public void previousMedia() {
         if(songNumber > 0) {
             songNumber--;
             mediaPlayer.stop();
             if(running == 1){
-                //cancelTimer();
                 libPlayPauseImgView.setImage(imgPlay);
                 running = 0;
             }else{
@@ -236,7 +237,6 @@ public class LibraryController implements Initializable {
         }else{
             songNumber = songs.size()-1;
             if(running == 1){
-                //cancelTimer();
                 libPlayPauseImgView.setImage(imgPlay);
                 running = 0;
             }else{
@@ -249,12 +249,16 @@ public class LibraryController implements Initializable {
             playMedia();
         }
     }
+    /**
+     * It gives access of the media to the next music file of the current file. 
+     * <p>
+     * It also set image Play icon to the libPlayPauseImgView.
+     */
     @FXML
     public void nextMedia() {
         if(songNumber < songs.size()-1) {
             songNumber++;
             if(running == 1){
-                //cancelTimer();
                 libPlayPauseImgView.setImage(imgPlay);
                 running = 0;
             }else{
@@ -268,7 +272,6 @@ public class LibraryController implements Initializable {
         }else{
             songNumber = 0;
             if(running == 1){
-                //cancelTimer();
                 libPlayPauseImgView.setImage(imgPlay);
                 running = 0;
             }else{
@@ -281,10 +284,20 @@ public class LibraryController implements Initializable {
             playMedia();
         }
     }
+    /**
+     * Receives an event when the speed combobox is clicked and changes speed of 
+     * the media according to the chosen speed by the user.
+     * <p>
+     * @param event 
+     */
     @FXML
     public void changeSpeed(ActionEvent event) {
         mediaPlayer.setRate(Double.parseDouble((String)speedBox.getValue()));
     }
+    /**
+     * Initializes Timer and TimerTask when a media is played to provide track of
+     * duration to the ProgressBar.
+     */
     private void beginTimer(){
         timer = new Timer();
         task = new TimerTask(){
@@ -300,10 +313,19 @@ public class LibraryController implements Initializable {
         };
         timer.scheduleAtFixedRate(task,1000,1000);
     }
+    /**
+     * Cancels timer if the media is paused or stopped.
+     */
     private void cancelTimer(){
         running = 0;
         timer.cancel();
     }
+    
+    /**
+     * Receives an event and switches scene from library fxml to Home fxml.
+     * @param event
+     * @throws IOException 
+     */
     @FXML
     private void navigateHome(MouseEvent event) throws IOException {
         // Stop music while navigating to other page
@@ -326,6 +348,11 @@ public class LibraryController implements Initializable {
         stage.centerOnScreen();
         stage.show();
     }
+    /**
+     * Receives an event and switches scene from library fxml to Favourite fxml.
+     * @param event
+     * @throws IOException 
+     */
     @FXML
     private void navigateFavourite(MouseEvent event) throws IOException {
         // Stop music while navigating to other page
