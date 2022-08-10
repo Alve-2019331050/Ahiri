@@ -14,6 +14,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -89,6 +90,8 @@ public class LibraryController implements Initializable {
         );
     */
     public ObservableList<LibrarySong> data;
+    @FXML
+    private Button libStopBtn;
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
@@ -189,6 +192,7 @@ public class LibraryController implements Initializable {
         
     }
     
+    @FXML
     public void playMedia(){
         if(running == 0){
             beginTimer();
@@ -202,6 +206,7 @@ public class LibraryController implements Initializable {
             running = 0;
         }
     }
+    @FXML
     public void stopMedia() {
         if(running == 1){
             //cancelTimer();
@@ -212,6 +217,7 @@ public class LibraryController implements Initializable {
         songProgressBar.setProgress(0);
         mediaPlayer.stop();
     }
+    @FXML
     public void previousMedia() {
         if(songNumber > 0) {
             songNumber--;
@@ -243,6 +249,7 @@ public class LibraryController implements Initializable {
             playMedia();
         }
     }
+    @FXML
     public void nextMedia() {
         if(songNumber < songs.size()-1) {
             songNumber++;
@@ -274,6 +281,7 @@ public class LibraryController implements Initializable {
             playMedia();
         }
     }
+    @FXML
     public void changeSpeed(ActionEvent event) {
         mediaPlayer.setRate(Double.parseDouble((String)speedBox.getValue()));
     }
@@ -298,18 +306,69 @@ public class LibraryController implements Initializable {
     }
     @FXML
     private void navigateHome(MouseEvent event) throws IOException {
+        // Stop music while navigating to other page
+        if(running==1){
+            cancelTimer();
+            mediaPlayer.pause();
+        }
         Stage stage = (Stage)((Node) event.getSource()).getScene().getWindow();
         Parent root = FXMLLoader.load(getClass().getResource("../fxml/Home.fxml"));
         Scene scene = new Scene(root);
+        scene.setOnMouseClicked(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent event) {
+                if(event.getClickCount()==2){
+                    stage.setFullScreen(true);
+                }
+            }
+        });
         stage.setScene(scene);
         stage.centerOnScreen();
         stage.show();
     }
     @FXML
     private void navigateFavourite(MouseEvent event) throws IOException {
+        // Stop music while navigating to other page
+        if(running==1){
+            cancelTimer();
+            mediaPlayer.pause();
+        }
+        
         Stage stage = (Stage)((Node) event.getSource()).getScene().getWindow();
         Parent root = FXMLLoader.load(getClass().getResource("../fxml/Fabourite.fxml"));
         Scene scene = new Scene(root);
+        scene.setOnMouseClicked(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent event) {
+                if(event.getClickCount()==2){
+                    stage.setFullScreen(true);
+                }
+            }
+        });
+        stage.setScene(scene);
+        stage.centerOnScreen();
+        stage.show();
+    }
+
+    @FXML
+    private void navigatePlaylist(MouseEvent event) throws IOException {
+        // Stop music while navigating to other page
+        if(running==1){
+            cancelTimer();
+            mediaPlayer.pause();
+        }
+        
+        Stage stage = (Stage)((Node) event.getSource()).getScene().getWindow();
+        Parent root = FXMLLoader.load(getClass().getResource("../fxml/Playlist.fxml"));
+        Scene scene = new Scene(root);
+        scene.setOnMouseClicked(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent event) {
+                if(event.getClickCount()==2){
+                    stage.setFullScreen(true);
+                }
+            }
+        });
         stage.setScene(scene);
         stage.centerOnScreen();
         stage.show();

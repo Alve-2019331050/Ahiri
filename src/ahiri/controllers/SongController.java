@@ -1,4 +1,3 @@
-
 package ahiri.controllers;
 
 import ahiri.Song;
@@ -10,7 +9,11 @@ import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 
-
+/**
+ * FXML Controller class
+ *
+ * @author Alve
+ */
 public class SongController implements Initializable {
 
     @FXML

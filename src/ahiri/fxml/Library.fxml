@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import java.lang.String?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.ComboBox?>
@@ -45,7 +46,7 @@
                               </ImageView>
                            </graphic>
                         </Button>
-                        <Label onMouseClicked="#navigateHome" prefHeight="54.0" prefWidth="212.0" text="  Home" textFill="#e1dfdf">
+                        <Label onMouseClicked="#navigateHome" prefHeight="54.0" prefWidth="212.0" styleClass="hover" stylesheets="@../css/styling.css" text="  Home" textFill="#e1dfdf">
                            <font>
                               <Font name="Bookman Old Style" size="18.0" />
                            </font>
@@ -63,7 +64,7 @@
                               </ImageView>
                            </graphic>
                         </Button>
-                        <Label prefHeight="50.0" prefWidth="208.0" text="  Search" textFill="#e1dfdf">
+                        <Label prefHeight="50.0" prefWidth="208.0" styleClass="hover" stylesheets="@../css/styling.css" text="  Search" textFill="#e1dfdf">
                            <font>
                               <Font name="Bookman Old Style" size="18.0" />
                            </font>
@@ -81,7 +82,7 @@
                               </ImageView>
                            </graphic>
                         </Button>
-                        <Label prefHeight="58.0" prefWidth="210.0" text="  Library" textFill="WHITE">
+                        <Label prefHeight="58.0" prefWidth="210.0" styleClass="hover" stylesheets="@../css/styling.css" text="  Library" textFill="WHITE">
                            <font>
                               <Font name="Bookman Old Style" size="18.0" />
                            </font>
@@ -109,7 +110,7 @@
                               </ImageView>
                            </graphic>
                         </Button>
-                        <Label prefHeight="49.0" prefWidth="205.0" text="  Create Playlist" textFill="#e1dfdf">
+                        <Label onMouseClicked="#navigatePlaylist" prefHeight="49.0" prefWidth="205.0" styleClass="hover" stylesheets="@../css/styling.css" text="  Create Playlist" textFill="#e1dfdf">
                            <font>
                               <Font name="Book Antiqua" size="18.0" />
                            </font>
@@ -127,7 +128,7 @@
                               </ImageView>
                            </graphic>
                         </Button>
-                        <Label onMouseClicked="#navigateFavourite" prefHeight="48.0" prefWidth="203.0" text="  Favourite" textFill="#e1dfdf">
+                        <Label onMouseClicked="#navigateFavourite" prefHeight="48.0" prefWidth="203.0" styleClass="hover" stylesheets="@../css/styling.css" text="  Favourite" textFill="#e1dfdf">
                            <font>
                               <Font size="18.0" />
                            </font>
@@ -162,7 +163,11 @@
                   </Button>
                   <HBox alignment="TOP_CENTER" prefHeight="100.0" prefWidth="200.0">
                      <children>
-                        <Slider fx:id="libVolumeSlider" prefHeight="100.0" prefWidth="400.0" styleClass="libVolumeSlider" stylesheets="@../css/styling.css" />
+                        <Slider fx:id="libVolumeSlider" prefHeight="100.0" prefWidth="400.0" stylesheets="@../css/styling.css">
+                           <styleClass>
+                              <String fx:value="libVolumeSlider" />
+                              <String fx:value="hover" />
+                           </styleClass></Slider>
                      </children>
                   </HBox>
                </children>
@@ -217,7 +222,7 @@
                         </ImageView>
                      </graphic>
                   </Button>
-                  <ComboBox fx:id="speedBox" onAction="#changeSpeed" prefWidth="100.0" promptText="SPEED" />
+                  <ComboBox fx:id="speedBox" onAction="#changeSpeed" prefWidth="100.0" promptText="SPEED" styleClass="hover" stylesheets="@../css/styling.css" />
                </children>
             </HBox>
          </children>

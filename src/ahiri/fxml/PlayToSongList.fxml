@@ -15,7 +15,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="725.0" prefWidth="1350.0" styleClass="playtoSonglist_primary_color" stylesheets="@../css/styling.css" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1">
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="725.0" prefWidth="1350.0" styleClass="playtoSonglist_primary_color" stylesheets="@../css/styling.css" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ahiri.controllers.PlayToSongListController">
    <left>
       <VBox prefHeight="647.0" prefWidth="230.0" styleClass="secondary_color" stylesheets="@../css/styling.css" BorderPane.alignment="CENTER">
          <children>
@@ -41,7 +41,7 @@
                               </ImageView>
                            </graphic>
                         </Button>
-                        <Label prefHeight="49.0" prefWidth="181.0" styleClass="hover" stylesheets="@../css/styling.css" text="  Home" textFill="WHITE">
+                        <Label onMouseClicked="#navigateHome" prefHeight="49.0" prefWidth="181.0" styleClass="hover" stylesheets="@../css/styling.css" text="  Home" textFill="WHITE">
                            <font>
                               <Font name="Constantia Bold" size="15.0" />
                            </font>
@@ -76,7 +76,7 @@
                               </ImageView>
                            </graphic>
                         </Button>
-                        <Label prefHeight="24.0" prefWidth="174.0" styleClass="hover" stylesheets="@../css/styling.css" text="  Your library" textFill="#e1dbdb">
+                        <Label onMouseClicked="#navigateLibrary" prefHeight="24.0" prefWidth="174.0" styleClass="hover" stylesheets="@../css/styling.css" text="  Your library" textFill="#e1dbdb">
                            <font>
                               <Font name="Constantia" size="15.0" />
                            </font>
@@ -100,7 +100,7 @@
                               </ImageView>
                            </graphic>
                         </Button>
-                        <Label prefHeight="17.0" prefWidth="186.0" styleClass="hover" stylesheets="@../css/styling.css" text="  Create  Playlist" textFill="#e1dbdb">
+                        <Label onMouseClicked="#navigatePlaylist" prefHeight="17.0" prefWidth="186.0" styleClass="hover" stylesheets="@../css/styling.css" text="  Create  Playlist" textFill="#e1dbdb">
                            <font>
                               <Font name="Constantia" size="15.0" />
                            </font>
@@ -276,20 +276,35 @@
       </HBox>
    </bottom>
    <center>
-      <VBox prefHeight="200.0" prefWidth="100.0" BorderPane.alignment="CENTER">
+      <VBox prefHeight="200.0" prefWidth="100.0" spacing="5.0" BorderPane.alignment="CENTER">
          <children>
-            <Label prefHeight="99.0" prefWidth="1120.0" text="**Name of the Playlist**" textFill="#f4eded">
-               <font>
-                  <Font name="Bradley Hand ITC" size="48.0" />
-               </font>
-            </Label>
+            <HBox prefHeight="100.0" prefWidth="200.0" spacing="20.0">
+               <children>
+                  <Label fx:id="playlistName" prefHeight="86.0" prefWidth="953.0" textFill="#f4eded">
+                     <font>
+                        <Font name="Bradley Hand ITC" size="48.0" />
+                     </font>
+                     <HBox.margin>
+                        <Insets left="20.0" />
+                     </HBox.margin>
+                  </Label>
+                  <Button mnemonicParsing="false" onMouseClicked="#deletePlaylist" styleClass="btnSignUp" stylesheets="@../css/styling.css" text="Delete This Playlist">
+                     <HBox.margin>
+                        <Insets top="35.0" />
+                     </HBox.margin>
+                     <font>
+                        <Font name="Arial Rounded MT Bold" size="11.0" />
+                     </font>
+                  </Button>
+               </children>
+            </HBox>
             <VBox prefHeight="516.0" prefWidth="1120.0">
                <children>
-                  <TableView prefHeight="534.0" prefWidth="1120.0">
-                    <columns>
-                      <TableColumn prefWidth="75.0" text="C1" />
-                      <TableColumn prefWidth="75.0" text="C2" />
-                    </columns>
+                  <TableView fx:id="playlistSongTable" prefHeight="513.0" prefWidth="1120.0" stylesheets="@../css/PlaylistStyling.css">
+                     <columns>
+                        <TableColumn fx:id="colTitle" prefWidth="75.0" text="Title" />
+                        <TableColumn fx:id="colArtist" prefWidth="75.0" text="Artist" />
+                     </columns>
                      <columnResizePolicy>
                         <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
                      </columnResizePolicy>

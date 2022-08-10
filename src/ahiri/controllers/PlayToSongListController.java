@@ -1,8 +1,8 @@
-
 package ahiri.controllers;
 
 import ahiri.DatabaseConnection;
-import ahiri.Song;
+import ahiri.Playlist;
+import ahiri.PlaylistSongs;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
@@ -18,7 +18,6 @@ import javafx.beans.binding.Bindings;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
-import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -33,7 +32,6 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.Slider;
 import javafx.scene.control.TableColumn;
-import javafx.scene.control.TablePosition;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
@@ -49,21 +47,8 @@ import javafx.util.Duration;
  *
  * @author Alve
  */
-public class FavouriteController implements Initializable {
+public class PlayToSongListController implements Initializable {
 
-    @FXML
-    private TableView<Song> tableViewFavourite;
-    @FXML
-    private TableColumn<Song, Integer> colSerial;
-    @FXML
-    private TableColumn<Song, String> colTitle;
-    @FXML
-    private TableColumn<Song, String> colArtist;
-    @FXML
-    private TableColumn<Song, String> colDuration;
-    
-    private ObservableList<Song> songs = FXCollections.observableArrayList();
-    
     @FXML
     private Button btnMore;
     @FXML
@@ -104,6 +89,14 @@ public class FavouriteController implements Initializable {
     private Slider volumeSlider;
     @FXML
     private ComboBox speedBox;
+    @FXML
+    private Label playlistName;
+    @FXML
+    private TableView<PlaylistSongs> playlistSongTable;
+    @FXML
+    private TableColumn<PlaylistSongs, String> colTitle;
+    @FXML
+    private TableColumn<PlaylistSongs, String> colArtist;
     
     private File directory;
     File[] file;
@@ -111,174 +104,46 @@ public class FavouriteController implements Initializable {
     private ArrayList<File> playlist;
     
     private String speeds[]={"0.25","0.50","0.75","1","1.25","1.5","1.75","2"};
-    @FXML
-    private Label totalSongCount;
-    
-    private int songCount;
-    
     private Timer timer;
     private TimerTask task;
-    private boolean running;
- 
+    boolean running;
+    
     private Media media;
     private MediaPlayer mediaPlayer;
-    String time,songName,artistName;
-    int index;
+    private ObservableList<PlaylistSongs> playlistSongs = FXCollections.observableArrayList();
+    private int songCount;
     
     Image imgPause;
     Image imgPlay;
-
-    String path = new File("src/ahiri/music").getAbsolutePath();
     
+    String path = new File("src/ahiri/music").getAbsolutePath();
+
+    /**
+     * Initializes the controller class.
+     */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        
-        playlist = new ArrayList<File>();
-        directory = new File(path);
-        file=directory.listFiles();
-        
-        /*
-            Initializing favourite song table with data from database
-        */
-        index = 0;
-        
+        playlistName.setText(PlaylistController.selectedPlaylistName);
         Connection conn = new DatabaseConnection().getConnection();
-        String query = "SELECT * FROM favourite_list;";
+        String query = "SELECT * FROM playlist_songs WHERE BINARY playlist_name = '"+PlaylistController.selectedPlaylistName+"';";
         try{
             Statement statement = conn.createStatement();
             ResultSet queryResult = statement.executeQuery(query);
             while(queryResult.next()){
-                songName = queryResult.getString("song_name");
-                artistName = MediaBarController.artist.getName(songName);
-                
-                // Getting total time of this song
-                int duration = 0;
-                try{
-                    for(File files:file){
-                    if((path+"\\"+songName+".mp3").equals(files.toString())){
-                        media = new Media(files.toURI().toString());
-                        mediaPlayer = new MediaPlayer(media);
-                        mediaPlayer.totalDurationProperty().addListener(new ChangeListener<Duration>() {
-                            @Override
-                            public void changed(ObservableValue<? extends Duration> observable, Duration oldValue, Duration newValue) {
-                                time = getTime(newValue);
-                            }
-                        });
-                    }
-                }
-                }catch(Exception e){
-                    e.printStackTrace();
-                }
-                songs.add(new Song(++index,songName,artistName,time,"../images/"+songName.toLowerCase()+".jpg"));
+                String songName = queryResult.getString("song_name");
+                String artist = MediaBarController.artist.getName(songName);
+                playlistSongs.add(new PlaylistSongs(songName,artist));
             }
         }catch(Exception e){
             e.printStackTrace();
         }
-        
-        colSerial.setCellValueFactory(new PropertyValueFactory<Song,Integer>("serialNo"));
-        colTitle.setCellValueFactory(new PropertyValueFactory<Song,String>("title"));
-        colArtist.setCellValueFactory(new PropertyValueFactory<Song,String>("artist"));
-        colDuration.setCellValueFactory(new PropertyValueFactory<Song,String>("duration"));
-        
-        tableViewFavourite.setItems(songs);
-        
-        // Initializing songcount label
-        totalSongCount.setText(Integer.toString(index)+" songs");
-        
-        /*
-            Adding listener for mouse click in table cell
-        */
-        tableViewFavourite.getSelectionModel().setCellSelectionEnabled(true);
-        ObservableList selectedCells = tableViewFavourite.getSelectionModel().getSelectedCells();
-
-        selectedCells.addListener(new ListChangeListener() {
-            @Override
-            public void onChanged(Change c) {
-                TablePosition tablePosition = (TablePosition) selectedCells.get(0);
-                Object val = tablePosition.getTableColumn().getCellData(tablePosition.getRow());
-                String songName = (String)val;
-                selectedSongName.setText(songName);
-                String artist = MediaBarController.artist.getName(songName);
-                selectedArtist.setText(artist);
-                Image img = new Image(new File("src/ahiri/images/"+songName.toLowerCase()+".jpg").toURI().toString());
-                selectedImg.setImage(img);
-                
-                // handle if music is already playing
-                        
-                if(running){
-                    imgPlayPause.setImage(imgPlay);
-                    cancelTimer();
-                    mediaPlayer.pause();
-                    running = false;
-                }
-                
-                for(File files: file){
-                    String name = selectedSongName.getText();
-                    if((path+"\\"+name+".mp3").equals(files.toString())){
-                        playlist.add(files);
-                        songCount=playlist.size()-1;
-                        media = new Media(files.toURI().toString());
-                        mediaPlayer = new MediaPlayer(media);
-
-                        bindCurTimeLabel();
-
-                        mediaPlayer.totalDurationProperty().addListener(new ChangeListener<Duration>() {
-                            @Override
-                            public void changed(ObservableValue<? extends Duration> observable, Duration oldValue, Duration newValue) {
-                                musicSlider.setValue(0.0);
-                                musicSlider.setMax(newValue.toSeconds());
-                                endTimeLabel.setText(getTime(newValue));
-                            }
-                        });
-
-                        mediaPlayer.currentTimeProperty().addListener(new ChangeListener<Duration>(){
-                            @Override
-                            public void changed(ObservableValue<? extends Duration> observable, Duration oldValue, Duration newValue) {
-                                musicSlider.setValue(newValue.toSeconds());
-                            }
-                        });
-
-                        musicSlider.setOnMousePressed(new EventHandler<MouseEvent>() {
-                            @Override
-                            public void handle(MouseEvent event) {
-                                mediaPlayer.seek(Duration.seconds(musicSlider.getValue()));
-                            }
-                        });
-
-                        musicSlider.setOnMouseDragged(new EventHandler<MouseEvent>() {
-                            @Override
-                            public void handle(MouseEvent event) {
-                                mediaPlayer.seek(Duration.seconds(musicSlider.getValue()));
-                            }
-                        });
-
-                        volumeSlider.valueProperty().addListener(new ChangeListener<Number>() {
-
-                            @Override
-                            public void changed(ObservableValue<? extends Number> arg0, Number arg1, Number arg2) {
-                                mediaPlayer.setVolume(volumeSlider.getValue()*0.01);
-                            }
-                        });
-                    }
-                }
-            }
-        });
-        
-        imgPause = new Image(new File("src/ahiri/images/pause_button_50px.png").toURI().toString());
-        imgPlay = new Image(new File("src/ahiri/images/circled_play_50px.png").toURI().toString());
-        curTimeLabel.setText("00.00");
-        endTimeLabel.setText("00.00");
-        running = false;
-        
-        // Initializing speedbox
-        for(int i=0;i<speeds.length;i++){
-            speedBox.getItems().add(speeds[i]);
-        }
+        colTitle.setCellValueFactory(new PropertyValueFactory<PlaylistSongs,String>("name"));
+        colArtist.setCellValueFactory(new PropertyValueFactory<PlaylistSongs,String>("artist"));
+        playlistSongTable.setItems(playlistSongs);
     }    
 
     @FXML
-    private void navigateHome(MouseEvent event)throws IOException {
-        
+    private void navigateHome(MouseEvent event) throws IOException {
         // Stop music while navigating to other page
         if(running){
             cancelTimer();
@@ -287,6 +152,78 @@ public class FavouriteController implements Initializable {
         
         Stage stage = (Stage)((Node) event.getSource()).getScene().getWindow();
         Parent root = FXMLLoader.load(getClass().getResource("../fxml/Home.fxml"));
+        Scene scene = new Scene(root);
+        scene.setOnMouseClicked(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent event) {
+                if(event.getClickCount()==2){
+                    stage.setFullScreen(true);
+                }
+            }
+        });
+        stage.setScene(scene);
+        stage.centerOnScreen();
+        stage.show();
+    }
+
+    @FXML
+    private void navigateLibrary(MouseEvent event) throws IOException {
+        // Stop music while navigating to other page
+        if(running){
+            cancelTimer();
+            mediaPlayer.pause();
+        }
+        
+        Stage stage = (Stage)((Node) event.getSource()).getScene().getWindow();
+        Parent root = FXMLLoader.load(getClass().getResource("../fxml/Library.fxml"));
+        Scene scene = new Scene(root);
+        scene.setOnMouseClicked(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent event) {
+                if(event.getClickCount()==2){
+                    stage.setFullScreen(true);
+                }
+            }
+        });
+        stage.setScene(scene);
+        stage.centerOnScreen();
+        stage.show();
+    }
+
+    @FXML
+    private void navigatePlaylist(MouseEvent event) throws IOException {
+        // Stop music while navigating to other page
+        if(running){
+            cancelTimer();
+            mediaPlayer.pause();
+        }
+        
+        Stage stage = (Stage)((Node) event.getSource()).getScene().getWindow();
+        Parent root = FXMLLoader.load(getClass().getResource("../fxml/Playlist.fxml"));
+        Scene scene = new Scene(root);
+        scene.setOnMouseClicked(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent event) {
+                if(event.getClickCount()==2){
+                    stage.setFullScreen(true);
+                }
+            }
+        });
+        stage.setScene(scene);
+        stage.centerOnScreen();
+        stage.show();
+    }
+
+    @FXML
+    private void navigateFavourite(MouseEvent event) throws IOException {
+        // Stop music while navigating to other page
+        if(running){
+            cancelTimer();
+            mediaPlayer.pause();
+        }
+        
+        Stage stage = (Stage)((Node) event.getSource()).getScene().getWindow();
+        Parent root = FXMLLoader.load(getClass().getResource("../fxml/Fabourite.fxml"));
         Scene scene = new Scene(root);
         scene.setOnMouseClicked(new EventHandler<MouseEvent>() {
             @Override
@@ -367,7 +304,6 @@ public class FavouriteController implements Initializable {
 
     @FXML
     private void playMusic(ActionEvent event) {
-        
         if(running == false){
             imgPlayPause.setImage(imgPause);
             initiateTimer();
@@ -380,7 +316,7 @@ public class FavouriteController implements Initializable {
             imgPlayPause.setImage(imgPlay);
             pauseMusic(event);
             running = false;
-        }       
+        }
     }
     
     private void pauseMusic(ActionEvent event) {
@@ -530,7 +466,7 @@ public class FavouriteController implements Initializable {
         }
         return false;
     }
-
+    
     private void insertDB() {
         // Insert currenly playing song in database
         Connection conn = new DatabaseConnection().getConnection();
@@ -553,50 +489,25 @@ public class FavouriteController implements Initializable {
     }
 
     @FXML
-    private void navigateLibrary(MouseEvent event) throws IOException {
-        // Stop music while navigating to other page
-        if(running){
-            cancelTimer();
-            mediaPlayer.pause();
+    private void deletePlaylist(MouseEvent event) throws IOException{
+        Connection conn = new DatabaseConnection().getConnection();
+        // Deleting every song of this playlist
+        String query = "DELETE FROM playlist_songs WHERE playlist_name = '"+PlaylistController.selectedPlaylistName+"';";
+        try{
+            Statement statement = conn.createStatement();
+            statement.executeUpdate(query);
+        }catch(Exception e){
+            e.printStackTrace();
         }
         
-        Stage stage = (Stage)((Node) event.getSource()).getScene().getWindow();
-        Parent root = FXMLLoader.load(getClass().getResource("../fxml/Library.fxml"));
-        Scene scene = new Scene(root);
-        scene.setOnMouseClicked(new EventHandler<MouseEvent>() {
-            @Override
-            public void handle(MouseEvent event) {
-                if(event.getClickCount()==2){
-                    stage.setFullScreen(true);
-                }
-            }
-        });
-        stage.setScene(scene);
-        stage.centerOnScreen();
-        stage.show();
-    }
-
-    @FXML
-    private void navigatePlaylist(MouseEvent event) throws IOException {
-        // Stop music while navigating to other page
-        if(running){
-            cancelTimer();
-            mediaPlayer.pause();
+        // Deleting the playlist from playlist database
+        query = "DELETE FROM playlist WHERE playlist_name = '"+PlaylistController.selectedPlaylistName+"';";
+        try{
+            Statement statement = conn.createStatement();
+            statement.executeUpdate(query);
+        }catch(Exception e){
+            e.printStackTrace();
         }
-        
-        Stage stage = (Stage)((Node) event.getSource()).getScene().getWindow();
-        Parent root = FXMLLoader.load(getClass().getResource("../fxml/Playlist.fxml"));
-        Scene scene = new Scene(root);
-        scene.setOnMouseClicked(new EventHandler<MouseEvent>() {
-            @Override
-            public void handle(MouseEvent event) {
-                if(event.getClickCount()==2){
-                    stage.setFullScreen(true);
-                }
-            }
-        });
-        stage.setScene(scene);
-        stage.centerOnScreen();
-        stage.show();
+        navigatePlaylist(event);
     }
 }

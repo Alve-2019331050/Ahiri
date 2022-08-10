@@ -486,9 +486,23 @@ public class MediaBarController implements Initializable {
     
     @FXML
     private void navigateLibrary(MouseEvent event) throws IOException {
+        // Stop music while navigating to other page
+        if(isPlaying){
+            cancelTimer();
+            mediaPlayer.pause();
+        }
+        
         Stage stage = (Stage)((Node) event.getSource()).getScene().getWindow();
         Parent root = FXMLLoader.load(getClass().getResource("../fxml/Library.fxml"));
         Scene scene = new Scene(root);
+        scene.setOnMouseClicked(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent event) {
+                if(event.getClickCount()==2){
+                    stage.setFullScreen(true);
+                }
+            }
+        });
         stage.setScene(scene);
         stage.centerOnScreen();
         stage.show();
@@ -693,5 +707,29 @@ public class MediaBarController implements Initializable {
                 Logger.getLogger(MediaBarController.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
+    }
+
+    @FXML
+    private void navigatePlaylist(MouseEvent event) throws IOException {
+        // Stop music while navigating to other page
+        if(isPlaying){
+            cancelTimer();
+            mediaPlayer.pause();
+        }
+        
+        Stage stage = (Stage)((Node) event.getSource()).getScene().getWindow();
+        Parent root = FXMLLoader.load(getClass().getResource("../fxml/Playlist.fxml"));
+        Scene scene = new Scene(root);
+        scene.setOnMouseClicked(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent event) {
+                if(event.getClickCount()==2){
+                    stage.setFullScreen(true);
+                }
+            }
+        });
+        stage.setScene(scene);
+        stage.centerOnScreen();
+        stage.show();
     }
 }

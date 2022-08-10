@@ -1,4 +1,3 @@
-
 package ahiri;
 
 import javafx.beans.property.SimpleIntegerProperty;

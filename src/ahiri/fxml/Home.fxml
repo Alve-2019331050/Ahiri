@@ -79,7 +79,7 @@
                               </ImageView>
                            </graphic>
                         </Button>
-                        <Label prefHeight="24.0" prefWidth="174.0" styleClass="hover" stylesheets="@../css/styling.css" text="  Your library" textFill="#e1dbdb">
+                        <Label onMouseClicked="#navigateLibrary" prefHeight="24.0" prefWidth="174.0" styleClass="hover" stylesheets="@../css/styling.css" text="  Your library" textFill="#e1dbdb">
                            <font>
                               <Font name="Constantia" size="15.0" />
                            </font>
@@ -103,7 +103,7 @@
                               </ImageView>
                            </graphic>
                         </Button>
-                        <Label prefHeight="17.0" prefWidth="186.0" styleClass="hover" stylesheets="@../css/styling.css" text="  Create  Playlist" textFill="#e1dbdb">
+                        <Label onMouseClicked="#navigatePlaylist" prefHeight="17.0" prefWidth="186.0" styleClass="hover" stylesheets="@../css/styling.css" text="  Create  Playlist" textFill="#e1dbdb">
                            <font>
                               <Font name="Constantia" size="15.0" />
                            </font>
@@ -278,7 +278,7 @@
                   <HBox prefHeight="17.0" prefWidth="93.0" />
                </children>
             </VBox>
-            <ComboBox fx:id="speedBox" onAction="#changeSpeed" prefWidth="100.0" promptText="1" styleClass="hover" stylesheets="@../css/styling.css">
+            <ComboBox fx:id="speedBox" onAction="#changeSpeed" prefHeight="27.0" prefWidth="105.0" promptText="1" styleClass="hover" stylesheets="@../css/styling.css">
                <HBox.margin>
                   <Insets top="45.0" />
                </HBox.margin>

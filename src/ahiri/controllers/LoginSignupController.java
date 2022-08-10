@@ -29,7 +29,11 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 
-
+/**
+ * FXML Controller class
+ *
+ * @author Alve
+ */
 public class LoginSignupController implements Initializable {
 
     @FXML

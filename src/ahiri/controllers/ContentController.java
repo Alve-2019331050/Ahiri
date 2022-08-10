@@ -22,7 +22,9 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 
-
+/**
+ * @author Alve
+ */
 public class ContentController{
     
     List<Song> recentlyPlayed;
