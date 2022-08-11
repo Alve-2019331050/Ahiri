@@ -154,6 +154,18 @@ public class MediaBarController implements Initializable {
         artist.add("Pagol Hawar Badol Dine","Abid");
         artist.add("Sajani Sajani","Kavita Krishnamurthy");
         artist.add("The Final Countdown","Pagolworld");
+        artist.add("Mileya Mileya","Rekha Bhardwaj,Jigar Saraiya,Priya Andrews");
+        artist.add("Abar Abar Jigay","Stoic Bliss");
+        artist.add("Acid Ke","Stoic Bliss");
+        artist.add("Teerhara Ai Dheuer Shagor","Dolchut");
+        artist.add("Bayoskop","Dolchut");
+        artist.add("Beche Thakar Gaan","MRSong");
+        artist.add("Bazzi","Dolchut");
+        artist.add("Gari Chole Na","Dolchut");
+        artist.add("Tomakei Bole Debo","Dolchut");
+        artist.add("Aji Borishana Mukhorito","Rezwana Chowdhury Bonna");
+        artist.add("Ee Bela Daak Poreche","Rezwana Chowdhury Bonna");
+        artist.add("Kon Sudur Hote","Rezwana Chowdhury Bonna");
         
         /*
             Adding initial song and duration
@@ -176,6 +188,18 @@ public class MediaBarController implements Initializable {
         songDuration.add("Pagol Hawar Badol Dine","04:03");
         songDuration.add("Sajani Sajani","04:25");
         songDuration.add("The Final Countdown","05:10");
+        songDuration.add("Mileya Mileya","04:26");
+        songDuration.add("Abar Abar Jigay","03:33");
+        songDuration.add("Acid Ke","03:58");
+        songDuration.add("Teerhara Ai Dheuer Shagor","04:55");
+        songDuration.add("Bayoskop","02:42");
+        songDuration.add("Beche Thakar Gaan","04:13");
+        songDuration.add("Bazzi","05:14");
+        songDuration.add("Gari Chole Na","04:40");
+        songDuration.add("Tomakei Bole Debo","05:16");
+        songDuration.add("Aji Borishana Mukhorito","04:08");
+        songDuration.add("Ee Bela Daak Poreche","03:47");
+        songDuration.add("Kon Sudur Hote","06:21");
         
         try{
             
