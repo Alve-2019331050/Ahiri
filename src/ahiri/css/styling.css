@@ -124,10 +124,7 @@
     -fx-background-radius : 10;
 }
 .playlist_primary_color{
-    -fx-background-color : linear-gradient(
-       #0a000a,#120111,#1c041a,#1c051b,#1c051b,#2b0829,#380d35,#3d103a,#42103f,#450e41,#4d0d48,#590754,
-        #5c0b56,#6b0b65,#820d7a,#911189,#9c5497,#a85ea3,#c779c2,#d98bd4,#d692d2,#d18ccc,#cc99c9
-    );
+    -fx-background-color : linear-gradient(to top, #150923, #2e1843, #502062, #79257f, #a72399);
 }
 .playtoSonglist_primary_color{
     -fx-background-color : linear-gradient(

@@ -1,18 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.geometry.Insets?>
+<?import javafx.scene.Cursor?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ProgressBar?>
 <?import javafx.scene.control.Slider?>
 <?import javafx.scene.control.TableView?>
+<?import javafx.scene.effect.Reflection?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.VBox?>
-<?import javafx.scene.media.MediaView?>
 <?import javafx.scene.text.Font?>
 
 <BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="750.0" prefWidth="1350.0" styleClass="library_primary_color" stylesheets="@../css/styling.css" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ahiri.controllers.LibraryController">
@@ -167,14 +169,18 @@
                   </HBox>
                </children>
             </HBox>
-            <MediaView fitHeight="450.0" fitWidth="400.0">
-               <VBox.margin>
-                  <Insets top="20.0" />
-               </VBox.margin>
-            </MediaView>
+            <Pane prefHeight="422.0" prefWidth="400.0" style="-fx-background-color: black;">
+               <children>
+                  <ImageView fx:id="LibAudioSpectrum" fitHeight="430.0" fitWidth="402.0" layoutX="-2.0" layoutY="-1.0" pickOnBounds="true" preserveRatio="true">
+                     <effect>
+                        <Reflection />
+                     </effect>
+                  </ImageView>
+               </children>
+            </Pane>
             <HBox prefHeight="23.0" prefWidth="400.0">
                <children>
-                  <ProgressBar fx:id="songProgressBar" prefHeight="10.0" prefWidth="400.0" progress="0.0" />
+                  <ProgressBar fx:id="songProgressBar" prefHeight="16.0" prefWidth="400.0" progress="0.0" />
                </children>
             </HBox>
             <HBox alignment="CENTER" prefHeight="56.0" prefWidth="400.0">
@@ -217,7 +223,10 @@
                         </ImageView>
                      </graphic>
                   </Button>
-                  <ComboBox fx:id="speedBox" onAction="#changeSpeed" prefWidth="100.0" promptText="SPEED" />
+                  <ComboBox fx:id="speedBox" onAction="#changeSpeed" prefHeight="26.0" prefWidth="83.0" promptText="SPEED">
+                     <cursor>
+                        <Cursor fx:constant="HAND" />
+                     </cursor></ComboBox>
                </children>
             </HBox>
             <HBox prefHeight="100.0" prefWidth="200.0">
@@ -227,9 +236,9 @@
                         <Insets left="180.0" top="30.0" />
                      </HBox.margin>
                      <graphic>
-                        <ImageView fitHeight="58.0" fitWidth="56.0" pickOnBounds="true" preserveRatio="true">
+                        <ImageView fitHeight="30.0" fitWidth="100.0" pickOnBounds="true" preserveRatio="true">
                            <image>
-                              <Image url="@../images/addPlaylist.png" />
+                              <Image url="@../images/addPlaylist2.png" />
                            </image>
                         </ImageView>
                      </graphic>
@@ -263,7 +272,7 @@
                   <HBox alignment="CENTER" prefHeight="57.0" prefWidth="689.0" />
                </children>
             </VBox>
-            <TableView fx:id="songTable" prefHeight="681.0" prefWidth="689.0" stylesheets="@../css/LibraryStyling.css" />
+            <TableView fx:id="songTable" nodeOrientation="LEFT_TO_RIGHT" prefHeight="681.0" prefWidth="689.0" style="-fx-background-color: transparent;" stylesheets="@../css/LibraryStyling.css" />
          </children>
       </VBox>
    </center>

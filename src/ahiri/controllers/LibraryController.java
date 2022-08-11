@@ -9,6 +9,8 @@ import java.util.Objects;
 import java.util.ResourceBundle;
 import java.util.Timer;
 import java.util.TimerTask;
+import javafx.animation.ScaleTransition;
+import javafx.animation.TranslateTransition;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
@@ -33,9 +35,13 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.HBox;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
+import javafx.scene.paint.Paint;
+import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
+import javafx.util.Duration;
 
 /**
  * This class controls functionalities of Library.
@@ -56,11 +62,11 @@ public class LibraryController implements Initializable {
     @FXML
     private Label libSongLabel,topLabel,totSongNumberLabel;
     @FXML
-    private ImageView libPlayPauseImgView;
+    private ImageView libPlayPauseImgView,LibAudioSpectrum;
     @FXML
     private TableView songTable;
     
-    Image imgPause,imgPlay;
+    Image imgPause,imgPlay,stSpec,cSpec0,cSpec1,lSpec0,lSpec1;
     
     private File directory;
     private File[] files;
@@ -116,7 +122,13 @@ public class LibraryController implements Initializable {
 
             imgPause = new Image(new File("src/ahiri/images/libPauseBtn.png").toURI().toString());
             imgPlay = new Image(new File("src/ahiri/images/library_play.png").toURI().toString());
+            stSpec = new Image(new File("src/ahiri/images/stSpec.jpg").toURI().toString());
+            cSpec0 = new Image(new File("src/ahiri/images/cSpec0.gif").toURI().toString());
+            cSpec1= new Image(new File("src/ahiri/images/cSpec1.gif").toURI().toString());
+            lSpec0 = new Image(new File("src/ahiri/images/lSpec0.gif").toURI().toString());
+            lSpec1 = new Image(new File("src/ahiri/images/lSpec1.gif").toURI().toString());
             libPlayPauseImgView.setImage(imgPlay);
+            LibAudioSpectrum.setImage(stSpec);
             running = 0;
             
             libVolumeSlider.valueProperty().addListener(new ChangeListener<Number>(){
@@ -126,6 +138,8 @@ public class LibraryController implements Initializable {
                 }
                 
             });
+            
+            //songProgressBar.setStyle("-fx-accent : #FFFFFF");
             
             TableColumn c1 = new TableColumn("Track");
             TableColumn c2 = new TableColumn("Duration");
@@ -150,6 +164,7 @@ public class LibraryController implements Initializable {
                             mediaPlayer = new MediaPlayer(media);
                             libSongLabel.setText(songs.get(i).getName());
                             playMedia();
+                            animate();
                             break;
                         }
                         songNumber = (++songNumber)%(int)(songs.size());
@@ -183,15 +198,18 @@ public class LibraryController implements Initializable {
      * Pauses the media and adds image of Play media to the ImageView when the button named libPlayPauseBtn
      * is clicked and the value of variable <i>running<i> is set to one.
      */
+    @FXML
     public void playMedia(){
         if(running == 0){
             beginTimer();
             mediaPlayer.play();
+            animate();
             libPlayPauseImgView.setImage(imgPause);
             running = 1;
         }else{
             cancelTimer();
             mediaPlayer.pause();
+            LibAudioSpectrum.setImage(stSpec);
             libPlayPauseImgView.setImage(imgPlay);
             running = 0;
         }
@@ -202,8 +220,10 @@ public class LibraryController implements Initializable {
      * <p>
      * It also sets the Progress Bar.
      */
+    @FXML
     public void stopMedia() {
         if(running == 1){
+            LibAudioSpectrum.setImage(stSpec);
             libPlayPauseImgView.setImage(imgPlay);
             running = 0;
         }
@@ -216,11 +236,13 @@ public class LibraryController implements Initializable {
      * <p>
      * It also set image Play icon to the libPlayPauseImgView.
      */
+    @FXML
     public void previousMedia() {
         if(songNumber > 0) {
             songNumber--;
             mediaPlayer.stop();
-            if(running == 1){
+            if(running == 0){
+                LibAudioSpectrum.setImage(stSpec);
                 libPlayPauseImgView.setImage(imgPlay);
                 running = 0;
             }else{
@@ -232,7 +254,8 @@ public class LibraryController implements Initializable {
             playMedia();
         }else{
             songNumber = songs.size()-1;
-            if(running == 1){
+            if(running == 0){
+                LibAudioSpectrum.setImage(stSpec);
                 libPlayPauseImgView.setImage(imgPlay);
                 running = 0;
             }else{
@@ -250,10 +273,12 @@ public class LibraryController implements Initializable {
      * <p>
      * It also set image Play icon to the libPlayPauseImgView.
      */
+    @FXML
     public void nextMedia() {
         if(songNumber < songs.size()-1) {
             songNumber++;
-            if(running == 1){
+            if(running == 0){
+                LibAudioSpectrum.setImage(stSpec);
                 libPlayPauseImgView.setImage(imgPlay);
                 running = 0;
             }else{
@@ -266,7 +291,8 @@ public class LibraryController implements Initializable {
             playMedia();
         }else{
             songNumber = 0;
-            if(running == 1){
+            if(running == 0){
+                LibAudioSpectrum.setImage(stSpec);
                 libPlayPauseImgView.setImage(imgPlay);
                 running = 0;
             }else{
@@ -285,6 +311,7 @@ public class LibraryController implements Initializable {
      * <p>
      * @param event 
      */
+    @FXML
     public void changeSpeed(ActionEvent event) {
         mediaPlayer.setRate(Double.parseDouble((String)speedBox.getValue()));
     }
@@ -344,7 +371,21 @@ public class LibraryController implements Initializable {
         stage.show();
     }
     
-
+    public int getRandomNumber(int min, int max) {
+        return (int)((Math.random()*(max-min)))+min;
+    }
     
+    private void animate(){
+       int id = getRandomNumber(1,5);
+       if(id == 1){
+           LibAudioSpectrum.setImage(cSpec0);
+       }else if(id == 2){
+           LibAudioSpectrum.setImage(cSpec1);
+       }else if(id == 3){
+           LibAudioSpectrum.setImage(lSpec0);
+       }else{
+           LibAudioSpectrum.setImage(lSpec1);
+       }
+    }
 }
 
