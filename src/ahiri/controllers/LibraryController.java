@@ -1,9 +1,13 @@
 package ahiri.controllers;
 
+import ahiri.DatabaseConnection;
 import ahiri.LibrarySong;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Objects;
 import java.util.ResourceBundle;
@@ -61,6 +65,7 @@ public class LibraryController implements Initializable {
     @FXML
     private TableView songTable;
     
+    static String selectedSongName;
     Image imgPause,imgPlay;
     
     private File directory;
@@ -143,10 +148,18 @@ public class LibraryController implements Initializable {
             selectedCells.addListener(new ListChangeListener() {
                 @Override
                 public void onChanged(ListChangeListener.Change change) {
+                    // handle if song is already playing
+                    if(running==1){
+                        libPlayPauseImgView.setImage(imgPlay);
+                        cancelTimer();
+                        mediaPlayer.stop();
+                        running = 0;
+                    }
                     TablePosition tp = (TablePosition)selectedCells.get(0);
                     Object ob = tp.getTableColumn().getCellData(tp.getRow());;
+                    selectedSongName=(String)ob;
                     for(int i = 0; i < songs.size(); i++){
-                        if(Objects.equals(ob,songs.get(i).getName())){
+                        if(Objects.equals(selectedSongName+".mp3",songs.get(i).getName())){
                             media = new Media(songs.get(i).toURI().toString());
                             mediaPlayer = new MediaPlayer(media);
                             libSongLabel.setText(songs.get(i).getName());
@@ -170,9 +183,10 @@ public class LibraryController implements Initializable {
     
     private void loadTable(ArrayList<File> value){
         for(int i = 0; i < value.size(); i++) {
-            String songName = value.get(i).getName();
-            String songDuration;
-            data.add(new LibrarySong(songName,"0:00"));
+            String songNameWithExtension = value.get(i).getName();
+            String songName = songNameWithExtension.substring(0, songNameWithExtension.length()-4);
+            String songDuration = MediaBarController.songDuration.getDuration(songName);
+            data.add(new LibrarySong(songName,songDuration));
         }
         songTable.setItems(data);
     }
@@ -190,6 +204,7 @@ public class LibraryController implements Initializable {
             beginTimer();
             mediaPlayer.play();
             libPlayPauseImgView.setImage(imgPause);
+            insertDB();
             running = 1;
         }else{
             cancelTimer();
@@ -246,6 +261,8 @@ public class LibraryController implements Initializable {
             media = new Media(songs.get(songNumber).toURI().toString());
             mediaPlayer = new MediaPlayer(media);
             libSongLabel.setText(songs.get(songNumber).getName());
+            selectedSongName = songs.get(songNumber).getName();
+            insertDB();
             playMedia();
         }
     }
@@ -281,6 +298,8 @@ public class LibraryController implements Initializable {
             media = new Media(songs.get(songNumber).toURI().toString());
             mediaPlayer = new MediaPlayer(media);
             libSongLabel.setText(songs.get(songNumber).getName());
+            selectedSongName = songs.get(songNumber).getName();
+            insertDB();
             playMedia();
         }
     }
@@ -400,8 +419,66 @@ public class LibraryController implements Initializable {
         stage.centerOnScreen();
         stage.show();
     }
-    
 
+    /**
+     * Open up playlist chooser and add selected song to the playlist
+     */
+    @FXML
+    private void addSongToPlaylist(MouseEvent event) throws IOException{
+        Stage window = new Stage();
+        Parent root =FXMLLoader.load(getClass().getResource("../fxml/PlaylistPopUp.fxml"));
+        Scene scene = new Scene(root);
+        scene.setOnMouseClicked(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent event) {
+                if(event.getClickCount()==2){
+                    window.setFullScreen(true);
+                }
+            }
+        });
+        window.setScene(scene);
+        window.centerOnScreen();
+        window.show();
+    }
     
+    /**
+     * 
+     * @return true if currently playing song is already in recentlyplayed database , false otherwise
+     */
+    private boolean checkDBRP(){
+        Connection conn = new DatabaseConnection().getConnection();
+        String query = "SELECT count(1) FROM recentlyplayed WHERE song_name = '"+selectedSongName+"';";
+        try{
+            Statement statement = conn.createStatement();
+            ResultSet queryResult = statement.executeQuery(query);
+            if(queryResult.next()){
+                if(queryResult.getInt(1)==1) return true;
+            }
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+        return false;
+    }
+    
+    // Insert currenly playing song in database
+    private void insertDB() {
+        Connection conn = new DatabaseConnection().getConnection();
+        if(checkDBRP()==true){
+            String query = "DELETE FROM recentlyplayed WHERE song_name = '"+selectedSongName+"';";
+            try{
+                Statement statement = conn.createStatement();
+                statement.executeUpdate(query);
+            }catch(Exception e){
+                e.printStackTrace();
+            }
+        }
+        String query = "INSERT INTO recentlyplayed(song_name) VALUES('"+selectedSongName+"');";
+        try{
+            Statement statement = conn.createStatement();
+            statement.executeUpdate(query);
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+    } 
 }
 

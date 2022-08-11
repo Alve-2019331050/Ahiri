@@ -3,6 +3,7 @@ package ahiri.controllers;
 import ahiri.Artist;
 import ahiri.DatabaseConnection;
 import ahiri.Song;
+import ahiri.SongDuration;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
@@ -124,6 +125,7 @@ public class MediaBarController implements Initializable {
     private ToggleButton favBtn;
     
     static Artist artist = new Artist();
+    static SongDuration songDuration = new SongDuration();
     
     @Override
     public void initialize(URL url, ResourceBundle rb) { 
@@ -134,10 +136,46 @@ public class MediaBarController implements Initializable {
         /*
             Adding initial song and artist name
         */
-        artist.add("TUMI RABE NIROBE"," Arnob");
         artist.add("BHALOBESHEY SHOKHI JODI NIBHRITE JOTONE"," Borno Chokroborty");
         artist.add("AMI CHINIGO CHINI TOMARE"," Borno Chokroborty");
         artist.add("AMI KAN PETE ROI"," Borno Chokroborty");
+        artist.add("DIN BARI JAY","Bappa");
+        artist.add("Borney Gondhey Chondey Geetitey","Bappa");
+        artist.add("Hok Kolorob","Arnob");
+        artist.add("Surjo Snane Chol","Bappa");
+        artist.add("Bhalobasha Tar Por","Arnob");
+        artist.add("Momero Putul Momer", "Anuradha pardowal");
+        artist.add("Money Pore Rub Rai", "Bappa");
+        artist.add("Lag Ja Gale Se Phir","Madan Mohon,Lata Mangeskar");
+        artist.add("Ami Nirbasone Jabo","Bappa");
+        artist.add("Ami Cheye Cheye Dekhi","Shyamal Mitra");
+        artist.add("Amay Dekona","Happy Akhond");
+        artist.add("Coffee Houser Shei Addata","Manna De");
+        artist.add("Pagol Hawar Badol Dine","Abid");
+        artist.add("Sajani Sajani","Kavita Krishnamurthy");
+        artist.add("The Final Countdown","Pagolworld");
+        
+        /*
+            Adding initial song and duration
+        */
+        songDuration.add("BHALOBESHEY SHOKHI JODI NIBHRITE JOTONE","04:40");
+        songDuration.add("AMI CHINIGO CHINI TOMARE","03:32");
+        songDuration.add("AMI KAN PETE ROI","03:29");
+        songDuration.add("DIN BARI JAY","05:17");
+        songDuration.add("Borney Gondhey Chondey Geetitey","05:01");
+        songDuration.add("Hok Kolorob","03:23");
+        songDuration.add("Surjo Snane Chol","04:29");
+        songDuration.add("Bhalobasha Tar Por","04:38");
+        songDuration.add("Momero Putul Momer", "05:06");
+        songDuration.add("Money Pore Rub Rai", "05:37");
+        songDuration.add("Lag Ja Gale Se Phir","04:18");
+        songDuration.add("Ami Nirbasone Jabo","04:19");
+        songDuration.add("Ami Cheye Cheye Dekhi","03:15");
+        songDuration.add("Amay Dekona","03:37");
+        songDuration.add("Coffee Houser Shei Addata","06:21");
+        songDuration.add("Pagol Hawar Badol Dine","04:03");
+        songDuration.add("Sajani Sajani","04:25");
+        songDuration.add("The Final Countdown","05:10");
         
         try{
             
@@ -278,7 +316,17 @@ public class MediaBarController implements Initializable {
         String previous = playlist.get(songCount).toString();
         String name = previous.substring(path.length()+1, previous.length()-4);
         selectedSongName.setText(name);
-        Image img = new Image(new File("src/ahiri/images/"+name.toLowerCase()+".jpg").toURI().toString());
+        String imgPath;
+        switch(name.toLowerCase()){
+            case "ami chinigo chini tomare":
+            case "ami kan pete roi":
+            case "bhalobeshey shokhi jodi nibhrite jotone":
+            case "pagla hawar badol din e":
+                 imgPath=name.toLowerCase();break;
+            case "the final countdown": imgPath="europa";break;
+            default: imgPath="musicbd";break;
+        }
+        Image img = new Image(new File("src/ahiri/images/"+imgPath+".jpg").toURI().toString());
         selectedImg.setImage(img);
         String artistName = artist.getName(name);
         selectedArtist.setText(artistName);
@@ -384,7 +432,17 @@ public class MediaBarController implements Initializable {
         String previous = playlist.get(songCount).toString();
         String name = previous.substring(path.length()+1, previous.length()-4);
         selectedSongName.setText(name);
-        Image img = new Image(new File("src/ahiri/images/"+name.toLowerCase()+".jpg").toURI().toString());
+        String imgPath;
+        switch(name.toLowerCase()){
+            case "ami chinigo chini tomare":
+            case "ami kan pete roi":
+            case "bhalobeshey shokhi jodi nibhrite jotone":
+            case "pagla hawar badol din e":
+                imgPath=name.toLowerCase();break;
+            case "the final countdown": imgPath="europa";break;
+            default: imgPath="musicbd";break;
+        }
+        Image img = new Image(new File("src/ahiri/images/"+imgPath+".jpg").toURI().toString());
         selectedImg.setImage(img);
         String artistName = artist.getName(name);
         selectedArtist.setText(artistName);

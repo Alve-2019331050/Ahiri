@@ -149,24 +149,19 @@ public class FavouriteController implements Initializable {
                 artistName = MediaBarController.artist.getName(songName);
                 
                 // Getting total time of this song
-                int duration = 0;
-                try{
-                    for(File files:file){
-                    if((path+"\\"+songName+".mp3").equals(files.toString())){
-                        media = new Media(files.toURI().toString());
-                        mediaPlayer = new MediaPlayer(media);
-                        mediaPlayer.totalDurationProperty().addListener(new ChangeListener<Duration>() {
-                            @Override
-                            public void changed(ObservableValue<? extends Duration> observable, Duration oldValue, Duration newValue) {
-                                time = getTime(newValue);
-                            }
-                        });
-                    }
+                time = MediaBarController.songDuration.getDuration(songName);
+                
+                String imgPath;
+                switch(songName.toLowerCase()){
+                    case "ami chinigo chini tomare":
+                    case "ami kan pete roi":
+                    case "bhalobeshey shokhi jodi nibhrite jotone":
+                    case "pagla hawar badol din e":
+                        imgPath=songName.toLowerCase();break;
+                    case "the final countdown": imgPath="europa";break;
+                    default: imgPath="musicbd";break;
                 }
-                }catch(Exception e){
-                    e.printStackTrace();
-                }
-                songs.add(new Song(++index,songName,artistName,time,"../images/"+songName.toLowerCase()+".jpg"));
+                songs.add(new Song(++index,songName,artistName,time,"../images/"+imgPath+".jpg"));
             }
         }catch(Exception e){
             e.printStackTrace();
@@ -196,7 +191,17 @@ public class FavouriteController implements Initializable {
                 selectedSongName.setText(songName);
                 String artist = MediaBarController.artist.getName(songName);
                 selectedArtist.setText(artist);
-                Image img = new Image(new File("src/ahiri/images/"+songName.toLowerCase()+".jpg").toURI().toString());
+                String imgPath;
+                switch(songName.toLowerCase()){
+                    case "ami chinigo chini tomare":
+                    case "ami kan pete roi":
+                    case "bhalobeshey shokhi jodi nibhrite jotone":
+                    case "pagla hawar badol din e":
+                        imgPath=songName.toLowerCase();break;
+                    case "the final countdown": imgPath="europa";break;
+                    default: imgPath="musicbd";break;
+                }
+                Image img = new Image(new File("src/ahiri/images/"+imgPath+".jpg").toURI().toString());
                 selectedImg.setImage(img);
                 
                 // handle if music is already playing
@@ -320,7 +325,17 @@ public class FavouriteController implements Initializable {
         String previous = playlist.get(songCount).toString();
         String name = previous.substring(path.length()+1, previous.length()-4);
         selectedSongName.setText(name);
-        Image img = new Image(new File("src/ahiri/images/"+name.toLowerCase()+".jpg").toURI().toString());
+        String imgPath;
+        switch(name.toLowerCase()){
+            case "ami chinigo chini tomare":
+            case "ami kan pete roi":
+            case "bhalobeshey shokhi jodi nibhrite jotone":
+            case "pagla hawar badol din e":
+                imgPath=name.toLowerCase();break;
+            case "the final countdown": imgPath="europa";break;
+            default: imgPath="musicbd";break;
+        }
+        Image img = new Image(new File("src/ahiri/images/"+imgPath+".jpg").toURI().toString());
         selectedImg.setImage(img);
         String artistName = MediaBarController.artist.getName(name);
         selectedArtist.setText(artistName);
@@ -415,7 +430,17 @@ public class FavouriteController implements Initializable {
         String previous = playlist.get(songCount).toString();
         String name = previous.substring(path.length()+1, previous.length()-4);
         selectedSongName.setText(name);
-        Image img = new Image(new File("src/ahiri/images/"+name.toLowerCase()+".jpg").toURI().toString());
+        String imgPath;
+        switch(name.toLowerCase()){
+            case "ami chinigo chini tomare":
+            case "ami kan pete roi":
+            case "bhalobeshey shokhi jodi nibhrite jotone":
+            case "pagla hawar badol din e":
+                imgPath=name.toLowerCase();break;
+            case "the final countdown": imgPath="europa";break;
+            default: imgPath="musicbd";break;
+        }
+        Image img = new Image(new File("src/ahiri/images/"+imgPath+".jpg").toURI().toString());
         selectedImg.setImage(img);
         String artistName = MediaBarController.artist.getName(name);
         selectedArtist.setText(artistName);

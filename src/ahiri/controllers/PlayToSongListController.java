@@ -9,6 +9,7 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.Objects;
 import java.util.ResourceBundle;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -17,6 +18,7 @@ import javafx.beans.binding.Bindings;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
+import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -31,6 +33,7 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.Slider;
 import javafx.scene.control.TableColumn;
+import javafx.scene.control.TablePosition;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
@@ -110,7 +113,7 @@ public class PlayToSongListController implements Initializable {
     private Media media;
     private MediaPlayer mediaPlayer;
     private ObservableList<PlaylistSongs> playlistSongs = FXCollections.observableArrayList();
-    private int songCount;
+    private int songNumber;
     
     Image imgPause;
     Image imgPlay;
@@ -122,6 +125,11 @@ public class PlayToSongListController implements Initializable {
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
+        
+        playlist = new ArrayList<File>();
+        directory = new File(path);
+        file=directory.listFiles();
+        
         // Setting name of the playlist
         playlistName.setText(PlaylistController.selectedPlaylistName);
         //fetching songs of this playlist from database
@@ -134,14 +142,133 @@ public class PlayToSongListController implements Initializable {
                 String songName = queryResult.getString("song_name");
                 String artist = MediaBarController.artist.getName(songName);
                 playlistSongs.add(new PlaylistSongs(songName,artist));
+                for(File files: file){
+                    if((path+"\\"+songName+".mp3").equals(files.toString())){
+                        playlist.add(files);
+                    }
+                }
             }
         }catch(Exception e){
             e.printStackTrace();
         }
+        
+        media = new Media(playlist.get(songNumber).toURI().toString());
+        mediaPlayer = new MediaPlayer(media);
+        
         // Sets the value of the property cellValueFactory
         colTitle.setCellValueFactory(new PropertyValueFactory<PlaylistSongs,String>("name"));
         colArtist.setCellValueFactory(new PropertyValueFactory<PlaylistSongs,String>("artist"));
         playlistSongTable.setItems(playlistSongs);
+        
+        //Adding listener for mouse click in table cell
+        playlistSongTable.getSelectionModel().setCellSelectionEnabled(true);
+        ObservableList selectedCells = playlistSongTable.getSelectionModel().getSelectedCells();
+
+        selectedCells.addListener(new ListChangeListener() {
+            @Override
+            public void onChanged(ListChangeListener.Change c) {
+                TablePosition tablePosition = (TablePosition) selectedCells.get(0);
+                Object val = tablePosition.getTableColumn().getCellData(tablePosition.getRow());
+                String songName = (String)val;
+                selectedSongName.setText(songName);
+                String artist = MediaBarController.artist.getName(songName);
+                selectedArtist.setText(artist);
+                String imgPath;
+                switch(songName.toLowerCase()){
+                    case "ami chinigo chini tomare":
+                    case "ami kan pete roi":
+                    case "bhalobeshey shokhi jodi nibhrite jotone":
+                    case "pagla hawar badol din e":
+                        imgPath=songName.toLowerCase();break;
+                    case "the final countdown": imgPath="europa";break;
+                    default: imgPath="musicbd";break;
+                }
+                Image img = new Image(new File("src/ahiri/images/"+imgPath+".jpg").toURI().toString());
+                selectedImg.setImage(img);
+                
+                // handle if music is already playing
+                        
+                if(running){
+                    imgPlayPause.setImage(imgPlay);
+                    cancelTimer();
+                    mediaPlayer.stop();
+                    running = false;
+                }
+                
+                for(int i = 0; i < playlist.size(); i++){
+                    if(Objects.equals(songName+".mp3",playlist.get(i).getName())){
+                        
+                        media = new Media(playlist.get(i).toURI().toString());
+                        mediaPlayer = new MediaPlayer(media);
+                        bindCurTimeLabel();
+
+                        mediaPlayer.totalDurationProperty().addListener(new ChangeListener<Duration>() {
+                            @Override
+                            public void changed(ObservableValue<? extends Duration> observable, Duration oldValue, Duration newValue) {
+                                musicSlider.setValue(0.0);
+                                musicSlider.setMax(newValue.toSeconds());
+                                endTimeLabel.setText(getTime(newValue));
+                            }
+                        });
+
+                        mediaPlayer.currentTimeProperty().addListener(new ChangeListener<Duration>(){
+                            @Override
+                            public void changed(ObservableValue<? extends Duration> observable, Duration oldValue, Duration newValue) {
+                                musicSlider.setValue(newValue.toSeconds());
+                            }
+                        });
+
+                        musicSlider.setOnMousePressed(new EventHandler<MouseEvent>() {
+                            @Override
+                            public void handle(MouseEvent event) {
+                                mediaPlayer.seek(Duration.seconds(musicSlider.getValue()));
+                            }
+                        });
+
+                        musicSlider.setOnMouseDragged(new EventHandler<MouseEvent>() {
+                            @Override
+                            public void handle(MouseEvent event) {
+                                mediaPlayer.seek(Duration.seconds(musicSlider.getValue()));
+                            }
+                        });
+
+                        volumeSlider.valueProperty().addListener(new ChangeListener<Number>() {
+
+                            @Override
+                            public void changed(ObservableValue<? extends Number> arg0, Number arg1, Number arg2) {
+                                mediaPlayer.setVolume(volumeSlider.getValue()*0.01);
+                            }
+                        });
+                        
+                        mediaPlayer.setOnEndOfMedia(new Runnable() {
+                            @Override
+                            public void run() {
+                                mediaPlayer.stop();
+                                if (songNumber<playlist.size()-1) {
+                                    //Plays the subsequent files
+                                    ActionEvent event = new ActionEvent();
+                                    nextMusic(event);
+                                }
+                                return;
+                            }
+                        });
+                        break;
+                    }
+                    songNumber = (++songNumber)%(int)(playlist.size());
+                }
+            }
+        });
+        
+        imgPause = new Image(new File("src/ahiri/images/pause_button_50px.png").toURI().toString());
+        imgPlay = new Image(new File("src/ahiri/images/circled_play_50px.png").toURI().toString());
+        curTimeLabel.setText("00.00");
+        endTimeLabel.setText("00.00");
+        running = false;
+        
+        // Initializing speedbox
+        for(int i=0;i<speeds.length;i++){
+            speedBox.getItems().add(speeds[i]);
+        }
     }    
 
     @FXML
@@ -242,29 +369,39 @@ public class PlayToSongListController implements Initializable {
 
     @FXML
     private void previousMusic(ActionEvent event) {
-        if (songCount > 0) {
+        if (songNumber > 0) {
  
-            --songCount;
+            --songNumber;
             stopMusic(event);
             if (running) cancelTimer();
-            media = new Media(playlist.get(songCount).toURI().toString());
+            media = new Media(playlist.get(songNumber).toURI().toString());
             mediaPlayer = new MediaPlayer(media);   
         }else {
  
             stopMusic(event);
-            songCount = playlist.size()-1;
+            songNumber = playlist.size()-1;
             if (running) cancelTimer();
-            media = new Media(playlist.get(songCount).toURI().toString());
+            media = new Media(playlist.get(songNumber).toURI().toString());
             mediaPlayer = new MediaPlayer(media);
 	}
         /*
             Manage change of thumbnail
         */
         
-        String previous = playlist.get(songCount).toString();
+        String previous = playlist.get(songNumber).toString();
         String name = previous.substring(path.length()+1, previous.length()-4);
         selectedSongName.setText(name);
-        Image img = new Image(new File("src/ahiri/images/"+name.toLowerCase()+".jpg").toURI().toString());
+        String imgPath;
+        switch(name.toLowerCase()){
+            case "ami chinigo chini tomare":
+            case "ami kan pete roi":
+            case "bhalobeshey shokhi jodi nibhrite jotone":
+            case "pagla hawar badol din e":
+                imgPath=name.toLowerCase();break;
+            case "the final countdown": imgPath="europa";break;
+            default: imgPath="musicbd";break;
+        }
+        Image img = new Image(new File("src/ahiri/images/"+imgPath+".jpg").toURI().toString());
         selectedImg.setImage(img);
         String artistName = MediaBarController.artist.getName(name);
         selectedArtist.setText(artistName);
@@ -332,24 +469,25 @@ public class PlayToSongListController implements Initializable {
             imgPlayPause.setImage(imgPlay);
             running = false;
         }
+        cancelTimer();
         mediaPlayer.stop();
     }
 
     @FXML
     private void nextMusic(ActionEvent event) {
-        if (songCount < playlist.size()-1) {
+        if (songNumber < playlist.size()-1) {
  
-            ++songCount;
+            ++songNumber;
             stopMusic(event);
             if (running) cancelTimer();
-            media = new Media(playlist.get(songCount).toURI().toString());
+            media = new Media(playlist.get(songNumber).toURI().toString());
             mediaPlayer = new MediaPlayer(media);
         } else {
  
             stopMusic(event);
-            songCount = 0;
+            songNumber = 0;
             if (running) cancelTimer();
-            media = new Media(playlist.get(songCount).toURI().toString());
+            media = new Media(playlist.get(songNumber).toURI().toString());
             mediaPlayer = new MediaPlayer(media);
 	}
         
@@ -357,10 +495,20 @@ public class PlayToSongListController implements Initializable {
             Manage change of thumbnail
         */
         
-        String previous = playlist.get(songCount).toString();
+        String previous = playlist.get(songNumber).toString();
         String name = previous.substring(path.length()+1, previous.length()-4);
         selectedSongName.setText(name);
-        Image img = new Image(new File("src/ahiri/images/"+name.toLowerCase()+".jpg").toURI().toString());
+        String imgPath;
+        switch(name.toLowerCase()){
+            case "ami chinigo chini tomare":
+            case "ami kan pete roi":
+            case "bhalobeshey shokhi jodi nibhrite jotone":
+            case "pagla hawar badol din e":
+                imgPath=name.toLowerCase();break;
+            case "the final countdown": imgPath="europa";break;
+            default: imgPath="musicbd";break;
+        }
+        Image img = new Image(new File("src/ahiri/images/"+imgPath+".jpg").toURI().toString());
         selectedImg.setImage(img);
         String artistName = MediaBarController.artist.getName(name);
         selectedArtist.setText(artistName);

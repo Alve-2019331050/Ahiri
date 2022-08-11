@@ -5,6 +5,7 @@ import java.util.HashMap;
 /**
  * This is an utility class for getting artist name associated with each song.
  * Song and artist name are stored as key value pair in the HashMap.
+ * @author Alve
  */
 public class Artist {
     private HashMap<String,String> hashmap = new HashMap<String,String>();

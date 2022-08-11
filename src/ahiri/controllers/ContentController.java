@@ -57,7 +57,18 @@ public class ContentController{
         // Traverse song list in reverse order to get the recently played song in correct order
         for(int i=songList.size()-1;i>=0;i--){
             String artistName = MediaBarController.artist.getName(songList.get(i));
-            Song song = new Song(1,songList.get(i),artistName,"","../images/"+songList.get(i).toLowerCase()+".jpg");
+            String imgPath;
+            switch(songList.get(i).toLowerCase()){
+                case "ami chinigo chini tomare":
+                case "ami kan pete roi":
+                case "bhalobeshey shokhi jodi nibhrite jotone":
+                case "pagla hawar badol din e":
+                case "tumi robe nirobe":
+                    imgPath=songList.get(i).toLowerCase();break;
+                case "the final countdown": imgPath="europa";break;
+                default: imgPath="musicbd";break;
+            }
+            Song song = new Song(1,songList.get(i),artistName,"","../images/"+imgPath+".jpg");
             recentlyPlayedSongs.add(song);
         }
         

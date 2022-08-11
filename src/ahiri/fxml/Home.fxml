@@ -148,19 +148,15 @@
          <children>
             <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" spacing="10.0">
                <children>
-                  <ImageView fx:id="selectedImg" fitHeight="63.0" fitWidth="61.0" pickOnBounds="true" preserveRatio="true">
-                     <image>
-                        <Image url="@../images/tumi%20robe%20nirobe(2).jpg" />
-                     </image>
-                  </ImageView>
+                  <ImageView fx:id="selectedImg" fitHeight="63.0" fitWidth="61.0" pickOnBounds="true" preserveRatio="true" />
                   <VBox prefHeight="200.0" prefWidth="100.0" spacing="5.0">
                      <children>
-                        <Label fx:id="selectedSongName" prefHeight="15.0" prefWidth="117.0" text="TUMI RABE NIROBE" textFill="WHITE">
+                        <Label fx:id="selectedSongName" prefHeight="15.0" prefWidth="117.0" textFill="WHITE">
                            <font>
                               <Font name="System Bold" size="10.0" />
                            </font>
                         </Label>
-                        <Label fx:id="selectedArtist" prefHeight="15.0" prefWidth="117.0" text="Arnob" textFill="WHITE">
+                        <Label fx:id="selectedArtist" prefHeight="15.0" prefWidth="117.0" textFill="WHITE">
                            <font>
                               <Font name="System Bold" size="10.0" />
                            </font>
